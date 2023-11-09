@@ -29,7 +29,6 @@ class DataPipeline:
         try:
             urlretrieve(url=self.data_source.url, filename=file_path)
         except Exception as e:
-            print(f"Error in downloading the data {e}")
             sys.exit(1)
         return file_path
 
@@ -37,24 +36,18 @@ class DataPipeline:
         try:
             # connect to the database
             connection = sqlite3.connect(self.output_db.db_name)
-            print(f"Succeed: Database created successfully")
 
             # insert data into the database
             data_frame.to_sql(
                 self.output_db.table_name, connection, if_exists="replace", index=False
             )
-            print(f"Succeed: Data inserted into the database successfully")
 
             # close the connection
             connection.close()
         except sqlite3.Error as e:
-            print(f"Error: An error occurred during table population: {str(e)}")
             sys.exit(1)
 
     def run_pipeline(self) -> None:
-        print(
-            f"Extracting {self.data_source.file_name} from source: {self.data_source.url}"
-        )
         file_path = self.extract_data()
         data_frame = pd.read_csv(
             file_path, sep=";", header=0, names=None, compression=None, encoding="utf-8"
