@@ -2,9 +2,14 @@ name: Exercise Feedback
 
 on:
   pull_request:
-     types:
+    types:
       - opened
       - edited
+      - closed
+      - reopened
+      # Makes sure we always add status check for PRs. Useful only if
+      # this action is required to pass before merging. Otherwise, it
+      # can be removed.
       - synchronize
     branches:
     - main
