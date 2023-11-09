@@ -52,13 +52,11 @@ class DataPipeline:
         print(f"Extracting {self.data_source.file_name} from source: {self.data_source.url}")
         file_path = self.extract_data()
         data_frame = pd.read_csv(file_path, sep=";", header=0, names=None, compression=None,  encoding="utf-8")
-        data_frame['Laenge'] = data_frame['Laenge'].apply(lambda x: float(x.split()[0].replace(',', '.')))
-        data_frame['Breite'] = data_frame['Breite'].apply(lambda x: float(x.split()[0].replace(',', '.')))
         self.store_data(data_frame=data_frame)
         
 
 if __name__ == "__main__":
-    data_source = DataSource(file_name="D_Bahnhof_2020_alle.csv", url="https://download-data.deutschebahn.com/static/datasets/haltestellen/D_Bahnhof_2020_alle.CSV")
+    data_source = DataSource(file_name="rhein-kreis-neuss-flughafen-weltweit.csv", url="https://opendata.rhein-kreis-neuss.de/api/v2/catalog/datasets/rhein-kreis-neuss-flughafen-weltweit/exports/csv")
     output_db = DBConfig(db_name="airports.sqlite", table_name="airports")
     etl_pipeline = DataPipeline(data_source=data_source, output_db=output_db)
     etl_pipeline.run_pipeline()
