@@ -51,7 +51,9 @@ class DataPipeline:
     def run_pipeline(self) -> None:
         print(f"Extracting {self.data_source.file_name} from source: {self.data_source.url}")
         file_path = self.extract_data()
-        data_frame = pd.read_csv(file_path, sep=";", header=0, names=None, compression=None, encoding="utf-8")
+        data_frame = pd.read_csv(file_path, sep=";", header=0, names=None, compression=None,  encoding="utf-8")
+        data_frame['Laenge'] = data_frame['Laenge'].apply(lambda x: float(x.split()[0].replace(',', '.')))
+        data_frame['Breite'] = data_frame['Breite'].apply(lambda x: float(x.split()[0].replace(',', '.')))
         self.store_data(data_frame=data_frame)
         
 
