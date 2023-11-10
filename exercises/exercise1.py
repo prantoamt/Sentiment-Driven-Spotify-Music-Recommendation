@@ -32,7 +32,7 @@ class DataPipeline:
             sys.exit(1)
         return file_path
 
-    def store_data(self, data_frame: pd.DataFrame):
+    def load_data(self, data_frame: pd.DataFrame):
         try:
             # connect to the database
             connection = sqlite3.connect(self.output_db.db_name)
@@ -52,7 +52,7 @@ class DataPipeline:
         data_frame = pd.read_csv(
             file_path, sep=";", header=0, names=None, compression=None, encoding="utf-8"
         )
-        self.store_data(data_frame=data_frame)
+        self.load_data(data_frame=data_frame)
 
 
 if __name__ == "__main__":
