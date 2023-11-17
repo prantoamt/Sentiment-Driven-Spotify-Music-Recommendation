@@ -1,6 +1,7 @@
 .DS_Store
 /data/*
 !/data/.gitkeep
+**/__pycache__/**
 venv
 *.sqlite
 *.csv
