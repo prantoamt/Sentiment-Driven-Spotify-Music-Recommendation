@@ -2,6 +2,7 @@ attrs==22.2.0
 greenlet==2.0.2
 iniconfig==2.0.0
 numpy==1.24.2
+opendatasets==0.1.22
 packaging==23.0
 pandas==1.5.3
 pluggy==1.0.0
