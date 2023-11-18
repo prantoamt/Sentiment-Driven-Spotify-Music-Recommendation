@@ -1,5 +1,6 @@
 # Python imports
 import numpy as np
+
 # Third-party imports
 
 # Self imports6
@@ -38,7 +39,11 @@ if __name__ == "__main__":
         "title": str,
     }
     genres_file_info = FileInfo(
-        file_name="genres_v2.csv", sep=",", names=[], output_db=genres_output_db, dtype=genres_file_dtype,
+        file_name="genres_v2.csv",
+        sep=",",
+        names=[],
+        output_db=genres_output_db,
+        dtype=genres_file_dtype,
     )
     songs_data_source = DataSource(
         url="https://www.kaggle.com/datasets/mrmorj/dataset-of-songs-in-spotify/data",
@@ -47,7 +52,7 @@ if __name__ == "__main__":
     )
     songs_pipeline = DataPipeline(data_source=songs_data_source)
     songs_pipeline.run_pipeline()
-    
+
     # Twitter Pipeline
     twitter_output_db = OutputDBConfig(db_name="project.sqlite", table_name="tweets")
     twitter_file_dtype = {
@@ -55,7 +60,11 @@ if __name__ == "__main__":
         "category": "Int64",
     }
     twitter_file_info = FileInfo(
-        file_name="Twitter_Data.csv", sep=",", names=[], output_db=twitter_output_db, dtype=twitter_file_dtype,
+        file_name="Twitter_Data.csv",
+        sep=",",
+        names=[],
+        output_db=twitter_output_db,
+        dtype=twitter_file_dtype,
     )
     twitter_data_source = DataSource(
         url="https://www.kaggle.com/datasets/saurabhshahane/twitter-sentiment-dataset/",
