@@ -104,6 +104,7 @@ class DataPipeline:
             connection.close()
         except sqlite3.Error as e:
             sys.exit(1)
+        os.remove(path=file.file_path)
 
     def run_pipeline(self) -> None:
         file_path = self.extract_data()
