@@ -17,7 +17,7 @@ class OutputDBConfig:
         self.table_name = table_name
 
 
-class FileInfo:
+class CSVFile:
     def __init__(
         self,
         file_name: str,
@@ -45,11 +45,13 @@ class DataSource:
         self,
         url: str,
         source_name: str,
-        files_info: list[FileInfo],
+        files: list[CSVFile],
+        files_type: str,
     ) -> None:
         self.url = url
         self.source_name = source_name
-        self.files_info = files_info
+        self.files = files
+        self.files_type = files_type
 
 
 class DataPipeline:
@@ -81,7 +83,7 @@ class DataPipeline:
             file_path = self.__download_kaggle_zip_file()
         return file_path
 
-    def _transform_data(self, file: FileInfo) -> pd.DataFrame:
+    def _transform_data(self, file: CSVFile) -> pd.DataFrame:
         data_frame = pd.read_csv(
             file.file_path,
             sep=file.sep,
@@ -93,7 +95,7 @@ class DataPipeline:
         )
         return data_frame
 
-    def _load_data(self, file: FileInfo) -> None:
+    def _load_data(self, file: CSVFile) -> None:
         db_path = os.path.join(os.getcwd(), "data", file.output_db.db_name)
         try:
             connection = sqlite3.connect(db_path)
@@ -107,7 +109,7 @@ class DataPipeline:
     def run_pipeline(self) -> None:
         print(f"Running pipeling for {self.data_source.url} ....")
         file_path = self._extract_data()
-        for item in self.data_source.files_info:
+        for item in self.data_source.files:
             item.file_path = os.path.join(os.getcwd(), file_path, item.file_name)
             item._data_frame = self._transform_data(file=item)
             self._load_data(file=item)

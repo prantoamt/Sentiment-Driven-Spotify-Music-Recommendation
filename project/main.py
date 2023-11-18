@@ -7,7 +7,7 @@ import numpy as np
 from services.pipeline_services import (
     DataPipeline,
     DataSource,
-    FileInfo,
+    CSVFile,
     OutputDBConfig,
 )
 
@@ -38,7 +38,7 @@ if __name__ == "__main__":
         "Unnamed: 0": np.float64,
         "title": str,
     }
-    genres_file_info = FileInfo(
+    genres_file = CSVFile(
         file_name="genres_v2.csv",
         sep=",",
         names=[],
@@ -48,7 +48,8 @@ if __name__ == "__main__":
     songs_data_source = DataSource(
         url="https://www.kaggle.com/datasets/mrmorj/dataset-of-songs-in-spotify/data",
         source_name=DataSource.KAGGLE_DATA_SOURCE,
-        files_info=[genres_file_info],
+        files=[genres_file],
+        files_type="csv",
     )
     songs_pipeline = DataPipeline(data_source=songs_data_source)
     songs_pipeline.run_pipeline()
@@ -59,7 +60,7 @@ if __name__ == "__main__":
         "clean_text": str,
         "category": "Int64",
     }
-    twitter_file_info = FileInfo(
+    twitter_file = CSVFile(
         file_name="Twitter_Data.csv",
         sep=",",
         names=[],
@@ -69,7 +70,8 @@ if __name__ == "__main__":
     twitter_data_source = DataSource(
         url="https://www.kaggle.com/datasets/saurabhshahane/twitter-sentiment-dataset/",
         source_name=DataSource.KAGGLE_DATA_SOURCE,
-        files_info=[twitter_file_info],
+        files=[twitter_file],
+        files_type="csv",
     )
     twitter_pipeline = DataPipeline(data_source=twitter_data_source)
     twitter_pipeline.run_pipeline()
