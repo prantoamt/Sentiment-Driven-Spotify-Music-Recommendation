@@ -15,9 +15,9 @@ if __name__ == "__main__":
     genres_file_dtype = {
         "danceability": np.float64,
         "energy": np.float64,
-        "key": np.int64,
+        "key": "Int64",
         "loudness": np.float64,
-        "mode": np.int64,
+        "mode": "Int64",
         "speechiness": np.float64,
         "acousticness": np.float64,
         "instrumentalness": np.float64,
@@ -29,8 +29,8 @@ if __name__ == "__main__":
         "uri": str,
         "track_href": str,
         "analysis_url": str,
-        "duration_ms": np.int64,
-        "time_signature": np.int64,
+        "duration_ms": "Int64",
+        "time_signature": "Int64",
         "genre": str,
         "song_name": str,
         "Unnamed: 0": np.float64,
@@ -46,3 +46,19 @@ if __name__ == "__main__":
     )
     songs_pipeline = DataPipeline(data_source=songs_data_source)
     songs_pipeline.run_pipeline()
+    
+    twitter_output_db = OutputDBConfig(db_name="project.sqlite", table_name="tweets")
+    twitter_file_dtype = {
+        "clean_text": str,
+        "category": "Int64",
+    }
+    twitter_file_info = FileInfo(
+        file_name="Twitter_Data.csv", sep=",", names=[], output_db=twitter_output_db, dtype=twitter_file_dtype,
+    )
+    twitter_data_source = DataSource(
+        url="https://www.kaggle.com/datasets/saurabhshahane/twitter-sentiment-dataset/",
+        source_name=DataSource.KAGGLE_DATA_SOURCE,
+        files_info=[twitter_file_info],
+    )
+    twitter_pipeline = DataPipeline(data_source=twitter_data_source)
+    twitter_pipeline.run_pipeline()
