@@ -13,7 +13,14 @@ import opendatasets as od
 
 
 class OutputDBConfig:
-    def __init__(self, db_name: str, table_name: str, if_exists: str, index: bool, method: callable) -> None:
+    def __init__(
+        self,
+        db_name: str,
+        table_name: str,
+        if_exists: str,
+        index: bool,
+        method: Callable,
+    ) -> None:
         self.db_name = db_name
         self.table_name = table_name
         self.if_exists = if_exists
@@ -108,7 +115,11 @@ class DataPipeline:
         try:
             connection = sqlite3.connect(db_path)
             file._data_frame.to_sql(
-                file.output_db.table_name, connection, if_exists=file.output_db.if_exists, index=file.output_db.index, method=file.output_db.method
+                file.output_db.table_name,
+                connection,
+                if_exists=file.output_db.if_exists,
+                index=file.output_db.index,
+                method=file.output_db.method,
             )
             connection.close()
         except sqlite3.Error as e:
