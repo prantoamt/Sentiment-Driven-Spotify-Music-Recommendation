@@ -25,6 +25,7 @@ class FileInfo:
         sep: str,
         names: list[str],
         output_db: OutputDBConfig,
+        dtype: dict,
         file_path=None,
         encoding="utf-8",
     ) -> None:
@@ -32,6 +33,7 @@ class FileInfo:
         self.sep = sep
         self.names = names
         self.output_db = output_db
+        self.dtype = dtype
         self.file_path = file_path
         self.encoding = encoding
         self.data_frame = None
@@ -87,6 +89,7 @@ class DataPipeline:
             header=0,
             names=None,
             compression=None,
+            dtype=file.dtype,
             encoding=file.encoding,
         )
         return data_frame
