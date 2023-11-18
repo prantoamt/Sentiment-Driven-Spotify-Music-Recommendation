@@ -1,9 +1,8 @@
 # Python imports
-from typing import Union
+import shutil
 import os, sys
 import sqlite3
 from urllib.request import urlretrieve
-import zipfile
 
 # Third-party imports
 import pandas as pd
@@ -104,7 +103,6 @@ class DataPipeline:
             connection.close()
         except sqlite3.Error as e:
             sys.exit(1)
-        os.remove(path=file.file_path)
 
     def run_pipeline(self) -> None:
         file_path = self.extract_data()
@@ -112,3 +110,4 @@ class DataPipeline:
             item.file_path = os.path.join(os.getcwd(), file_path, item.file_name)
             item.data_frame = self.transform_data(file=item)
             self.load_data(file=item)
+        shutil.rmtree(file_path)

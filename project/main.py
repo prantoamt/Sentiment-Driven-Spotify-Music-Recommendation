@@ -41,7 +41,7 @@ if __name__ == "__main__":
     )
     songs_data_source = DataSource(
         url="https://www.kaggle.com/datasets/mrmorj/dataset-of-songs-in-spotify/data",
-        source_name="kaggle",
+        source_name=DataSource.KAGGLE_DATA_SOURCE,
         files_info=[genres_file_info],
     )
     songs_pipeline = DataPipeline(data_source=songs_data_source)
