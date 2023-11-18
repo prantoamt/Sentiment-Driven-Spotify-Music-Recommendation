@@ -14,7 +14,7 @@ from services.pipeline_services import (
 
 if __name__ == "__main__":
     # Songs Pipeline
-    genres_output_db = OutputDBConfig(db_name="project.sqlite", table_name="genres")
+    genres_output_db = OutputDBConfig(db_name="project.sqlite", table_name="genres", if_exists="replace", index=False, method=None)
     genres_file_dtype = {
         "danceability": np.float64,
         "energy": np.float64,
@@ -41,8 +41,7 @@ if __name__ == "__main__":
     }
     
     def transform_genres(data_frame: pd.DataFrame):
-        print("here==============")
-        data_frame=data_frame.dropna(axis=0)
+        # data_frame=data_frame.dropna(axis=0)
         return data_frame
     
     genres_file = CSVFile(
@@ -63,7 +62,7 @@ if __name__ == "__main__":
     songs_pipeline.run_pipeline()
 
     # Twitter Pipeline
-    twitter_output_db = OutputDBConfig(db_name="project.sqlite", table_name="tweets")
+    twitter_output_db = OutputDBConfig(db_name="project.sqlite", table_name="tweets", if_exists="replace", index=False, method=None)
     twitter_file_dtype = {
         "clean_text": str,
         "category": "Int64",

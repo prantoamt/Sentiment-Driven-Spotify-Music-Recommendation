@@ -13,9 +13,12 @@ import opendatasets as od
 
 
 class OutputDBConfig:
-    def __init__(self, db_name: str, table_name: str) -> None:
+    def __init__(self, db_name: str, table_name: str, if_exists: str, index: bool, method: callable) -> None:
         self.db_name = db_name
         self.table_name = table_name
+        self.if_exists = if_exists
+        self.index = index
+        self.method = method
 
 
 class CSVFile:
@@ -105,7 +108,7 @@ class DataPipeline:
         try:
             connection = sqlite3.connect(db_path)
             file._data_frame.to_sql(
-                file.output_db.table_name, connection, if_exists="replace", index=False
+                file.output_db.table_name, connection, if_exists=file.output_db.if_exists, index=file.output_db.index, method=file.output_db.method
             )
             connection.close()
         except sqlite3.Error as e:
