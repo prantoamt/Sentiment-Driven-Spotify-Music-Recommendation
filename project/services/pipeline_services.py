@@ -35,7 +35,7 @@ class FileInfo:
         self.dtype = dtype
         self.file_path = file_path
         self.encoding = encoding
-        self.data_frame = None
+        self._data_frame = None
 
 
 class DataSource:
@@ -57,7 +57,7 @@ class DataPipeline:
         self.data_source = data_source
 
     def __download_kaggle_zip_file(self) -> None:
-        data_dir="data"
+        data_dir = "data"
         try:
             # urlretrieve(url=self.data_source.url, filename=output_path)
             od.download(
@@ -76,12 +76,12 @@ class DataPipeline:
             sys.exit(1)
         return file_path
 
-    def extract_data(self) -> str:
+    def _extract_data(self) -> str:
         if self.data_source.source_name == DataSource.KAGGLE_DATA_SOURCE:
             file_path = self.__download_kaggle_zip_file()
         return file_path
 
-    def transform_data(self, file: FileInfo) -> pd.DataFrame:
+    def _transform_data(self, file: FileInfo) -> pd.DataFrame:
         data_frame = pd.read_csv(
             file.file_path,
             sep=file.sep,
@@ -93,11 +93,11 @@ class DataPipeline:
         )
         return data_frame
 
-    def load_data(self, file: FileInfo) -> None:
-        db_path=os.path.join(os.getcwd(), "data", file.output_db.db_name)
+    def _load_data(self, file: FileInfo) -> None:
+        db_path = os.path.join(os.getcwd(), "data", file.output_db.db_name)
         try:
             connection = sqlite3.connect(db_path)
-            file.data_frame.to_sql(
+            file._data_frame.to_sql(
                 file.output_db.table_name, connection, if_exists="replace", index=False
             )
             connection.close()
@@ -105,9 +105,10 @@ class DataPipeline:
             sys.exit(1)
 
     def run_pipeline(self) -> None:
-        file_path = self.extract_data()
+        print(f"Running pipeling for {self.data_source.url} ....")
+        file_path = self._extract_data()
         for item in self.data_source.files_info:
             item.file_path = os.path.join(os.getcwd(), file_path, item.file_name)
-            item.data_frame = self.transform_data(file=item)
-            self.load_data(file=item)
+            item._data_frame = self._transform_data(file=item)
+            self._load_data(file=item)
         shutil.rmtree(file_path)
