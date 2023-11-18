@@ -1,7 +1,8 @@
 # Python imports
-import numpy as np
 
 # Third-party imports
+import numpy as np
+import pandas as pd
 
 # Self imports6
 from services.pipeline_services import (
@@ -38,12 +39,19 @@ if __name__ == "__main__":
         "Unnamed: 0": np.float64,
         "title": str,
     }
+    
+    def transform_genres(data_frame: pd.DataFrame):
+        print("here==============")
+        data_frame=data_frame.dropna(axis=0)
+        return data_frame
+    
     genres_file = CSVFile(
         file_name="genres_v2.csv",
         sep=",",
         names=[],
         output_db=genres_output_db,
         dtype=genres_file_dtype,
+        transform=transform_genres,
     )
     songs_data_source = DataSource(
         url="https://www.kaggle.com/datasets/mrmorj/dataset-of-songs-in-spotify/data",

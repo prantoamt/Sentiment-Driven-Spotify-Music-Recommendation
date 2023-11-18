@@ -1,4 +1,5 @@
 # Python imports
+from typing import Callable
 import shutil
 import os, sys
 import sqlite3
@@ -25,6 +26,7 @@ class CSVFile:
         names: list[str],
         output_db: OutputDBConfig,
         dtype: dict,
+        transform: Callable[[pd.DataFrame], pd.DataFrame] = None,
         file_path=None,
         encoding="utf-8",
     ) -> None:
@@ -33,6 +35,7 @@ class CSVFile:
         self.names = names
         self.output_db = output_db
         self.dtype = dtype
+        self._transform = transform
         self.file_path = file_path
         self.encoding = encoding
         self._data_frame = None
@@ -93,6 +96,8 @@ class DataPipeline:
             dtype=file.dtype,
             encoding=file.encoding,
         )
+        if file._transform:
+            data_frame = file._transform(data_frame=data_frame)
         return data_frame
 
     def _load_data(self, file: CSVFile) -> None:
