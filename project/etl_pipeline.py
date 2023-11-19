@@ -1,4 +1,5 @@
 # Python imports
+import os
 
 # Third-party imports
 import numpy as np
@@ -9,12 +10,13 @@ from services.pipeline_services import (
     DataPipeline,
     DataSource,
     CSVFile,
-    OutputDBConfig,
+    SQLiteDB,
 )
 
 if __name__ == "__main__":
+    data_directory = os.path.join(os.getcwd(), "data")
     # Songs Pipeline
-    genres_output_db = OutputDBConfig(
+    genres_output_db = SQLiteDB(
         db_name="project.sqlite",
         table_name="genres",
         if_exists="replace",
@@ -54,7 +56,7 @@ if __name__ == "__main__":
         file_name="genres_v2.csv",
         sep=",",
         names=[],
-        output_db=genres_output_db,
+        sqlite_db=genres_output_db,
         dtype=genres_file_dtype,
         transform=transform_genres,
     )
@@ -62,13 +64,14 @@ if __name__ == "__main__":
         url="https://www.kaggle.com/datasets/mrmorj/dataset-of-songs-in-spotify/data",
         source_name=DataSource.KAGGLE_DATA_SOURCE,
         files=[genres_file],
-        files_type="csv",
     )
-    songs_pipeline = DataPipeline(data_source=songs_data_source)
+    songs_pipeline = DataPipeline(
+        data_source=songs_data_source, output_directory=data_directory
+    )
     songs_pipeline.run_pipeline()
 
     # Twitter Pipeline
-    twitter_output_db = OutputDBConfig(
+    twitter_output_db = SQLiteDB(
         db_name="project.sqlite",
         table_name="tweets",
         if_exists="replace",
@@ -83,14 +86,15 @@ if __name__ == "__main__":
         file_name="Twitter_Data.csv",
         sep=",",
         names=[],
-        output_db=twitter_output_db,
+        sqlite_db=twitter_output_db,
         dtype=twitter_file_dtype,
     )
     twitter_data_source = DataSource(
         url="https://www.kaggle.com/datasets/saurabhshahane/twitter-sentiment-dataset/",
         source_name=DataSource.KAGGLE_DATA_SOURCE,
         files=[twitter_file],
-        files_type="csv",
     )
-    twitter_pipeline = DataPipeline(data_source=twitter_data_source)
+    twitter_pipeline = DataPipeline(
+        data_source=twitter_data_source, output_directory=data_directory
+    )
     twitter_pipeline.run_pipeline()

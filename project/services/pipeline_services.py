@@ -12,7 +12,7 @@ import opendatasets as od
 # Self imports
 
 
-class OutputDBConfig:
+class SQLiteDB:
     def __init__(
         self,
         db_name: str,
@@ -27,6 +27,21 @@ class OutputDBConfig:
         self.index = index
         self.method = method
 
+    def _load_to_db(self, output_dir: str, data_frame: pd.DataFrame):
+        db_path = os.path.join(output_dir, self.db_name)
+        try:
+            connection = sqlite3.connect(db_path)
+            data_frame.to_sql(
+                self.table_name,
+                connection,
+                if_exists=self.if_exists,
+                index=self.index,
+                method=self.method,
+            )
+            connection.close()
+        except sqlite3.Error as e:
+            sys.exit(1)
+
 
 class CSVFile:
     def __init__(
@@ -34,16 +49,16 @@ class CSVFile:
         file_name: str,
         sep: str,
         names: list[str],
-        output_db: OutputDBConfig,
         dtype: dict,
         transform: Callable[[pd.DataFrame], pd.DataFrame] = None,
         file_path=None,
         encoding="utf-8",
+        sqlite_db: SQLiteDB = None,
     ) -> None:
         self.file_name = file_name
         self.sep = sep
         self.names = names
-        self.output_db = output_db
+        self.sqlite_db = sqlite_db
         self.dtype = dtype
         self._transform = transform
         self.file_path = file_path
@@ -59,25 +74,23 @@ class DataSource:
         url: str,
         source_name: str,
         files: list[CSVFile],
-        files_type: str,
     ) -> None:
         self.url = url
         self.source_name = source_name
         self.files = files
-        self.files_type = files_type
 
 
 class DataPipeline:
-    def __init__(self, data_source: DataSource) -> None:
+    def __init__(self, data_source: DataSource, output_directory: str) -> None:
         self.data_source = data_source
+        self.output_directory = output_directory
 
-    def __download_kaggle_zip_file(self) -> None:
-        data_dir = "data"
+    def _download_kaggle_zip_file(self) -> None:
         try:
             # urlretrieve(url=self.data_source.url, filename=output_path)
             od.download(
                 dataset_id_or_url=self.data_source.url,
-                data_dir=data_dir,
+                data_dir=self.output_directory,
                 force=False,
                 dry_run=False,
             )
@@ -85,7 +98,7 @@ class DataPipeline:
                 dataset_id_or_url=self.data_source.url
             )
             id = dataset_id.split("/")[1]
-            file_path = os.path.join(data_dir, id)
+            file_path = os.path.join(self.output_directory, id)
         except Exception as e:
             print(e)
             sys.exit(1)
@@ -93,7 +106,7 @@ class DataPipeline:
 
     def _extract_data(self) -> str:
         if self.data_source.source_name == DataSource.KAGGLE_DATA_SOURCE:
-            file_path = self.__download_kaggle_zip_file()
+            file_path = self._download_kaggle_zip_file()
         return file_path
 
     def _transform_data(self, file: CSVFile) -> pd.DataFrame:
@@ -111,19 +124,10 @@ class DataPipeline:
         return data_frame
 
     def _load_data(self, file: CSVFile) -> None:
-        db_path = os.path.join(os.getcwd(), "data", file.output_db.db_name)
-        try:
-            connection = sqlite3.connect(db_path)
-            file._data_frame.to_sql(
-                file.output_db.table_name,
-                connection,
-                if_exists=file.output_db.if_exists,
-                index=file.output_db.index,
-                method=file.output_db.method,
+        if file.sqlite_db != None:
+            file.sqlite_db._load_to_db(
+                output_dir=self.output_directory, data_frame=file._data_frame
             )
-            connection.close()
-        except sqlite3.Error as e:
-            sys.exit(1)
 
     def run_pipeline(self) -> None:
         print(f"Running pipeling for {self.data_source.url} ....")
