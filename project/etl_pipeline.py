@@ -1,4 +1,5 @@
 # Python imports
+import os
 
 # Third-party imports
 import numpy as np
@@ -13,6 +14,7 @@ from services.pipeline_services import (
 )
 
 if __name__ == "__main__":
+    data_directory = os.path.join(os.getcwd(), "data")
     # Songs Pipeline
     genres_output_db = SQLiteDB(
         db_name="project.sqlite",
@@ -63,7 +65,9 @@ if __name__ == "__main__":
         source_name=DataSource.KAGGLE_DATA_SOURCE,
         files=[genres_file],
     )
-    songs_pipeline = DataPipeline(data_source=songs_data_source)
+    songs_pipeline = DataPipeline(
+        data_source=songs_data_source, output_directory=data_directory
+    )
     songs_pipeline.run_pipeline()
 
     # Twitter Pipeline
@@ -90,5 +94,7 @@ if __name__ == "__main__":
         source_name=DataSource.KAGGLE_DATA_SOURCE,
         files=[twitter_file],
     )
-    twitter_pipeline = DataPipeline(data_source=twitter_data_source)
+    twitter_pipeline = DataPipeline(
+        data_source=twitter_data_source, output_directory=data_directory
+    )
     twitter_pipeline.run_pipeline()

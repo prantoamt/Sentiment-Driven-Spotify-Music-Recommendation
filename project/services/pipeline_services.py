@@ -26,17 +26,17 @@ class SQLiteDB:
         self.if_exists = if_exists
         self.index = index
         self.method = method
-    
+
     def _load_to_db(self, output_dir: str, data_frame: pd.DataFrame):
         db_path = os.path.join(output_dir, self.db_name)
         try:
             connection = sqlite3.connect(db_path)
             data_frame.to_sql(
-            self.table_name,
-            connection,
-            if_exists=self.if_exists,
-            index=self.index,
-            method=self.method,
+                self.table_name,
+                connection,
+                if_exists=self.if_exists,
+                index=self.index,
+                method=self.method,
             )
             connection.close()
         except sqlite3.Error as e:
@@ -81,16 +81,16 @@ class DataSource:
 
 
 class DataPipeline:
-    def __init__(self, data_source: DataSource) -> None:
+    def __init__(self, data_source: DataSource, output_directory: str) -> None:
         self.data_source = data_source
+        self.output_directory = output_directory
 
     def _download_kaggle_zip_file(self) -> None:
-        data_dir = "data"
         try:
             # urlretrieve(url=self.data_source.url, filename=output_path)
             od.download(
                 dataset_id_or_url=self.data_source.url,
-                data_dir=data_dir,
+                data_dir=self.output_directory,
                 force=False,
                 dry_run=False,
             )
@@ -98,7 +98,7 @@ class DataPipeline:
                 dataset_id_or_url=self.data_source.url
             )
             id = dataset_id.split("/")[1]
-            file_path = os.path.join(data_dir, id)
+            file_path = os.path.join(self.output_directory, id)
         except Exception as e:
             print(e)
             sys.exit(1)
@@ -122,11 +122,12 @@ class DataPipeline:
         if file._transform:
             data_frame = file._transform(data_frame=data_frame)
         return data_frame
-    
+
     def _load_data(self, file: CSVFile) -> None:
-        output_dir = os.path.join(os.getcwd(), "data")
         if file.sqlite_db != None:
-            file.sqlite_db._load_to_db(output_dir=output_dir, data_frame=file._data_frame)
+            file.sqlite_db._load_to_db(
+                output_dir=self.output_directory, data_frame=file._data_frame
+            )
 
     def run_pipeline(self) -> None:
         print(f"Running pipeling for {self.data_source.url} ....")
