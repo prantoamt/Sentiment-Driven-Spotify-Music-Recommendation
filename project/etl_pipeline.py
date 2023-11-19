@@ -22,6 +22,7 @@ if __name__ == "__main__":
         if_exists="replace",
         index=False,
         method=None,
+        output_directory=data_directory,
     )
     genres_file_dtype = {
         "danceability": np.float64,
@@ -56,7 +57,6 @@ if __name__ == "__main__":
         file_name="genres_v2.csv",
         sep=",",
         names=[],
-        sqlite_db=genres_output_db,
         dtype=genres_file_dtype,
         transform=transform_genres,
     )
@@ -66,7 +66,8 @@ if __name__ == "__main__":
         files=[genres_file],
     )
     songs_pipeline = DataPipeline(
-        data_source=songs_data_source, output_directory=data_directory
+        data_source=songs_data_source,
+        sqlite_db=genres_output_db,
     )
     songs_pipeline.run_pipeline()
 
@@ -77,6 +78,7 @@ if __name__ == "__main__":
         if_exists="replace",
         index=False,
         method=None,
+        output_directory=data_directory,
     )
     twitter_file_dtype = {
         "clean_text": str,
@@ -86,7 +88,6 @@ if __name__ == "__main__":
         file_name="Twitter_Data.csv",
         sep=",",
         names=[],
-        sqlite_db=twitter_output_db,
         dtype=twitter_file_dtype,
     )
     twitter_data_source = DataSource(
@@ -95,6 +96,7 @@ if __name__ == "__main__":
         files=[twitter_file],
     )
     twitter_pipeline = DataPipeline(
-        data_source=twitter_data_source, output_directory=data_directory
+        data_source=twitter_data_source,
+        sqlite_db=twitter_output_db,
     )
     twitter_pipeline.run_pipeline()
