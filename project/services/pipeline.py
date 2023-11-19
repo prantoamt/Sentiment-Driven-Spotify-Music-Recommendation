@@ -53,12 +53,10 @@ class CSVFile:
         transform: Callable[[pd.DataFrame], pd.DataFrame] = None,
         file_path=None,
         encoding="utf-8",
-        sqlite_db: SQLiteDB = None,
     ) -> None:
         self.file_name = file_name
         self.sep = sep
         self.names = names
-        self.sqlite_db = sqlite_db
         self.dtype = dtype
         self._transform = transform
         self.file_path = file_path
@@ -81,9 +79,12 @@ class DataSource:
 
 
 class DataPipeline:
-    def __init__(self, data_source: DataSource, output_directory: str) -> None:
+    def __init__(
+        self, data_source: DataSource, output_directory: str, sqlite_db: SQLiteDB = None
+    ) -> None:
         self.data_source = data_source
         self.output_directory = output_directory
+        self.sqlite_db = sqlite_db
 
     def _download_kaggle_zip_file(self) -> None:
         try:
@@ -124,8 +125,8 @@ class DataPipeline:
         return data_frame
 
     def _load_data(self, file: CSVFile) -> None:
-        if file.sqlite_db != None:
-            file.sqlite_db._load_to_db(
+        if self.sqlite_db != None:
+            self.sqlite_db._load_to_db(
                 output_dir=self.output_directory, data_frame=file._data_frame
             )
 
