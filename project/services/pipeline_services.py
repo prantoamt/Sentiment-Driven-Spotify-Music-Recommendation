@@ -12,7 +12,7 @@ import opendatasets as od
 # Self imports
 
 
-class OutputDBConfig:
+class SQLiteDB:
     def __init__(
         self,
         db_name: str,
@@ -26,6 +26,21 @@ class OutputDBConfig:
         self.if_exists = if_exists
         self.index = index
         self.method = method
+    
+    def _load_to_db(self, output_dir: str, data_frame: pd.DataFrame):
+        db_path = os.path.join(output_dir, self.db_name)
+        try:
+            connection = sqlite3.connect(db_path)
+            data_frame.to_sql(
+            self.table_name,
+            connection,
+            if_exists=self.if_exists,
+            index=self.index,
+            method=self.method,
+            )
+            connection.close()
+        except sqlite3.Error as e:
+            sys.exit(1)
 
 
 class CSVFile:
@@ -34,16 +49,16 @@ class CSVFile:
         file_name: str,
         sep: str,
         names: list[str],
-        output_db: OutputDBConfig,
         dtype: dict,
         transform: Callable[[pd.DataFrame], pd.DataFrame] = None,
         file_path=None,
         encoding="utf-8",
+        sqlite_db: SQLiteDB = None,
     ) -> None:
         self.file_name = file_name
         self.sep = sep
         self.names = names
-        self.output_db = output_db
+        self.sqlite_db = sqlite_db
         self.dtype = dtype
         self._transform = transform
         self.file_path = file_path
@@ -59,12 +74,10 @@ class DataSource:
         url: str,
         source_name: str,
         files: list[CSVFile],
-        files_type: str,
     ) -> None:
         self.url = url
         self.source_name = source_name
         self.files = files
-        self.files_type = files_type
 
 
 class DataPipeline:
@@ -109,21 +122,11 @@ class DataPipeline:
         if file._transform:
             data_frame = file._transform(data_frame=data_frame)
         return data_frame
-
+    
     def _load_data(self, file: CSVFile) -> None:
-        db_path = os.path.join(os.getcwd(), "data", file.output_db.db_name)
-        try:
-            connection = sqlite3.connect(db_path)
-            file._data_frame.to_sql(
-                file.output_db.table_name,
-                connection,
-                if_exists=file.output_db.if_exists,
-                index=file.output_db.index,
-                method=file.output_db.method,
-            )
-            connection.close()
-        except sqlite3.Error as e:
-            sys.exit(1)
+        output_dir = os.path.join(os.getcwd(), "data")
+        if file.sqlite_db != None:
+            file.sqlite_db._load_to_db(output_dir=output_dir, data_frame=file._data_frame)
 
     def run_pipeline(self) -> None:
         print(f"Running pipeling for {self.data_source.url} ....")
