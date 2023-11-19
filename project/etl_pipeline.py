@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 
 # Self imports6
-from services.pipeline_services import (
+from services.pipeline import (
     DataPipeline,
     DataSource,
     CSVFile,
