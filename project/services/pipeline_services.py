@@ -84,7 +84,7 @@ class DataPipeline:
     def __init__(self, data_source: DataSource) -> None:
         self.data_source = data_source
 
-    def __download_kaggle_zip_file(self) -> None:
+    def _download_kaggle_zip_file(self) -> None:
         data_dir = "data"
         try:
             # urlretrieve(url=self.data_source.url, filename=output_path)
@@ -106,7 +106,7 @@ class DataPipeline:
 
     def _extract_data(self) -> str:
         if self.data_source.source_name == DataSource.KAGGLE_DATA_SOURCE:
-            file_path = self.__download_kaggle_zip_file()
+            file_path = self._download_kaggle_zip_file()
         return file_path
 
     def _transform_data(self, file: CSVFile) -> pd.DataFrame:
