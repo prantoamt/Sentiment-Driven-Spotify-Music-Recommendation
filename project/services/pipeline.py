@@ -20,12 +20,14 @@ class SQLiteDB:
         if_exists: str,
         index: bool,
         method: Callable,
+        output_directory: str,
     ) -> None:
         self.db_name = db_name
         self.table_name = table_name
         self.if_exists = if_exists
         self.index = index
         self.method = method
+        self.output_directory = output_directory
 
     def _load_to_db(self, output_dir: str, data_frame: pd.DataFrame):
         db_path = os.path.join(output_dir, self.db_name)
@@ -79,19 +81,17 @@ class DataSource:
 
 
 class DataPipeline:
-    def __init__(
-        self, data_source: DataSource, output_directory: str, sqlite_db: SQLiteDB = None
-    ) -> None:
+    def __init__(self, data_source: DataSource, sqlite_db: SQLiteDB = None) -> None:
         self.data_source = data_source
-        self.output_directory = output_directory
         self.sqlite_db = sqlite_db
 
     def _download_kaggle_zip_file(self) -> None:
+        output_dir = self.sqlite_db.output_directory if self.sqlite_db else "."
         try:
             # urlretrieve(url=self.data_source.url, filename=output_path)
             od.download(
                 dataset_id_or_url=self.data_source.url,
-                data_dir=self.output_directory,
+                data_dir=output_dir,
                 force=False,
                 dry_run=False,
             )
@@ -99,7 +99,7 @@ class DataPipeline:
                 dataset_id_or_url=self.data_source.url
             )
             id = dataset_id.split("/")[1]
-            file_path = os.path.join(self.output_directory, id)
+            file_path = os.path.join(output_dir, id)
         except Exception as e:
             print(e)
             sys.exit(1)
@@ -127,7 +127,7 @@ class DataPipeline:
     def _load_data(self, file: CSVFile) -> None:
         if self.sqlite_db != None:
             self.sqlite_db._load_to_db(
-                output_dir=self.output_directory, data_frame=file._data_frame
+                output_dir=self.sqlite_db.output_directory, data_frame=file._data_frame
             )
 
     def run_pipeline(self) -> None:

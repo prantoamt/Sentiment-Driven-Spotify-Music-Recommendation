@@ -22,6 +22,7 @@ if __name__ == "__main__":
         if_exists="replace",
         index=False,
         method=None,
+        output_directory=data_directory,
     )
     genres_file_dtype = {
         "danceability": np.float64,
@@ -66,7 +67,6 @@ if __name__ == "__main__":
     )
     songs_pipeline = DataPipeline(
         data_source=songs_data_source,
-        output_directory=data_directory,
         sqlite_db=genres_output_db,
     )
     songs_pipeline.run_pipeline()
@@ -78,6 +78,7 @@ if __name__ == "__main__":
         if_exists="replace",
         index=False,
         method=None,
+        output_directory=data_directory,
     )
     twitter_file_dtype = {
         "clean_text": str,
@@ -96,7 +97,6 @@ if __name__ == "__main__":
     )
     twitter_pipeline = DataPipeline(
         data_source=twitter_data_source,
-        output_directory=data_directory,
         sqlite_db=twitter_output_db,
     )
     twitter_pipeline.run_pipeline()
