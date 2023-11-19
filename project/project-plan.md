@@ -49,6 +49,8 @@ The full list of genres included in the CSV are Trap, Techno, Techhouse, Trance,
 
 1. Investigate for interesting dataset [#1][i1]
 2. Write initial Description about the project plan [#2][i2]
+3. Construct ETL Pipeline [#3][i3]
 
 [i1]: https://github.com/prantoamt/made-template/issues/1
 [i2]: https://github.com/prantoamt/made-template/issues/2
+[i3]: https://github.com/prantoamt/made-template/issues/8
