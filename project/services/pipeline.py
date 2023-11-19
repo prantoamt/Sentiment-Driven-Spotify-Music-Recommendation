@@ -29,8 +29,8 @@ class SQLiteDB:
         self.method = method
         self.output_directory = output_directory
 
-    def _load_to_db(self, output_dir: str, data_frame: pd.DataFrame):
-        db_path = os.path.join(output_dir, self.db_name)
+    def _load_to_db(self, data_frame: pd.DataFrame):
+        db_path = os.path.join(self.output_directory, self.db_name)
         try:
             connection = sqlite3.connect(db_path)
             data_frame.to_sql(
@@ -126,9 +126,7 @@ class DataPipeline:
 
     def _load_data(self, file: CSVFile) -> None:
         if self.sqlite_db != None:
-            self.sqlite_db._load_to_db(
-                output_dir=self.sqlite_db.output_directory, data_frame=file._data_frame
-            )
+            self.sqlite_db._load_to_db(data_frame=file._data_frame)
 
     def run_pipeline(self) -> None:
         print(f"Running pipeling for {self.data_source.url} ....")
