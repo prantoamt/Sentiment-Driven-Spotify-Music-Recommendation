@@ -19,7 +19,7 @@ if __name__ == "__main__":
     genres_output_db = SQLiteDB(
         db_name="project.sqlite",
         table_name="genres",
-        if_exists="replace",
+        if_exists=SQLiteDB.REPLACE,
         index=False,
         method=None,
         output_directory=data_directory,
@@ -49,21 +49,17 @@ if __name__ == "__main__":
         "title": str,
     }
 
-    def transform_genres(data_frame: pd.DataFrame):
-        # data_frame=data_frame.dropna(axis=0)
-        return data_frame
-
     genres_file = CSVFile(
         file_name="genres_v2.csv",
         sep=",",
-        names=[],
+        names=None,
         dtype=genres_file_dtype,
-        transform=transform_genres,
     )
     songs_data_source = DataSource(
+        data_name="Spotify Songs",
         url="https://www.kaggle.com/datasets/mrmorj/dataset-of-songs-in-spotify/data",
-        source_name=DataSource.KAGGLE_DATA_SOURCE,
-        files=[genres_file],
+        source_type=DataSource.KAGGLE_DATA,
+        files=(genres_file,),
     )
     songs_pipeline = DataPipeline(
         data_source=songs_data_source,
@@ -75,7 +71,7 @@ if __name__ == "__main__":
     twitter_output_db = SQLiteDB(
         db_name="project.sqlite",
         table_name="tweets",
-        if_exists="replace",
+        if_exists=SQLiteDB.REPLACE,
         index=False,
         method=None,
         output_directory=data_directory,
@@ -87,13 +83,14 @@ if __name__ == "__main__":
     twitter_file = CSVFile(
         file_name="Twitter_Data.csv",
         sep=",",
-        names=[],
+        names=None,
         dtype=twitter_file_dtype,
     )
     twitter_data_source = DataSource(
+        data_name="Twitter",
         url="https://www.kaggle.com/datasets/saurabhshahane/twitter-sentiment-dataset/",
-        source_name=DataSource.KAGGLE_DATA_SOURCE,
-        files=[twitter_file],
+        source_type=DataSource.KAGGLE_DATA,
+        files=(twitter_file,),
     )
     twitter_pipeline = DataPipeline(
         data_source=twitter_data_source,

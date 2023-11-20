@@ -1,9 +1,11 @@
 # Python imports
-from typing import Callable
+import logging
+from typing import Callable, List, Iterable, Tuple, Any, Union
 import shutil
 import os, sys
 import sqlite3
 from urllib.request import urlretrieve
+from tqdm import tqdm
 
 # Third-party imports
 import pandas as pd
@@ -13,21 +15,27 @@ import opendatasets as od
 
 
 class SQLiteDB:
+    FAIL = "fail"
+    REPLACE = "replace"
+    APPEND = "append"
+
     def __init__(
         self,
         db_name: str,
         table_name: str,
         if_exists: str,
         index: bool,
-        method: Callable,
         output_directory: str,
+        method: Callable[
+            [pd.DataFrame, sqlite3.Connection, List, Iterable[Tuple[Any]]], None
+        ] = None,
     ) -> None:
         self.db_name = db_name
         self.table_name = table_name
         self.if_exists = if_exists
         self.index = index
-        self.method = method
         self.output_directory = output_directory
+        self.method = method
 
     def _load_to_db(self, data_frame: pd.DataFrame):
         db_path = os.path.join(self.output_directory, self.db_name)
@@ -42,18 +50,27 @@ class SQLiteDB:
             )
             connection.close()
         except sqlite3.Error as e:
+            logging.error(msg=f"Error while creating SQLite DB: {e}")
             sys.exit(1)
 
 
 class CSVFile:
+    ZIP_COMPRESSION = "zip"
+    GZIP_COMPRESSION = "gzip"
+    BZIP2_COMPRESSION = "bz2"
+    ZSTD_COMPRESSION = "zstd"
+    XZ_COMPRESSION = "xz"
+    TAR_COMPRESSION = "tar"
+
     def __init__(
         self,
         file_name: str,
         sep: str,
-        names: list[str],
         dtype: dict,
+        names: Union[List[str], None] = None,
         transform: Callable[[pd.DataFrame], pd.DataFrame] = None,
         file_path=None,
+        compression: str = None,
         encoding="utf-8",
     ) -> None:
         self.file_name = file_name
@@ -62,22 +79,35 @@ class CSVFile:
         self.dtype = dtype
         self._transform = transform
         self.file_path = file_path
+        self.compression = compression
         self.encoding = encoding
         self._data_frame = None
 
 
 class DataSource:
-    KAGGLE_DATA_SOURCE = "kaggle"
+    KAGGLE_DATA = "kaggle"
+    DIRECT_READ = "direct_read"
 
     def __init__(
         self,
+        data_name: str,
         url: str,
-        source_name: str,
-        files: list[CSVFile],
+        source_type: str,
+        files: Tuple[CSVFile],
     ) -> None:
+        self.data_name = data_name
         self.url = url
-        self.source_name = source_name
+        self.source_type = source_type
         self.files = files
+        self._validate()
+
+    def _validate(self):
+        if len(self.files) == 0:
+            raise ValueError("Number of files can not be ZERO in any DataSource!")
+        if self.source_type == self.DIRECT_READ and len(self.files) > 1:
+            raise ValueError(
+                "Number of files can not be more than 1 if the source type is direct read!"
+            )
 
 
 class DataPipeline:
@@ -85,10 +115,13 @@ class DataPipeline:
         self.data_source = data_source
         self.sqlite_db = sqlite_db
 
-    def _download_kaggle_zip_file(self) -> None:
+    def _get_output_dir(self):
         output_dir = self.sqlite_db.output_directory if self.sqlite_db else "."
+        return output_dir
+
+    def _download_kaggle_zip_file(self) -> None:
+        output_dir = self._get_output_dir()
         try:
-            # urlretrieve(url=self.data_source.url, filename=output_path)
             od.download(
                 dataset_id_or_url=self.data_source.url,
                 data_dir=output_dir,
@@ -101,22 +134,41 @@ class DataPipeline:
             id = dataset_id.split("/")[1]
             file_path = os.path.join(output_dir, id)
         except Exception as e:
-            print(e)
+            logging.error(msg=f"Error while downloading kaggle data: {e}")
             sys.exit(1)
         return file_path
 
+    def _download_direct_read_file(self) -> str:
+        output_dir = self._get_output_dir()
+        file_path = os.path.join(output_dir, self.data_source.files[0].file_name)
+
+        if os.path.isfile(file_path):
+            print("Skipping download: the file already exists!")
+            return output_dir
+
+        try:
+            urlretrieve(url=self.data_source.url, filename=file_path)
+        except Exception as e:
+            logging.error(
+                msg=f"Error while downloading the {self.data_source.files[0].file_name} data: {e}"
+            )
+            sys.exit(1)
+        return output_dir
+
     def _extract_data(self) -> str:
-        if self.data_source.source_name == DataSource.KAGGLE_DATA_SOURCE:
+        if self.data_source.source_type == DataSource.KAGGLE_DATA:
             file_path = self._download_kaggle_zip_file()
+        if self.data_source.source_type == DataSource.DIRECT_READ:
+            file_path = self._download_direct_read_file()
         return file_path
 
     def _transform_data(self, file: CSVFile) -> pd.DataFrame:
         data_frame = pd.read_csv(
-            file.file_path,
+            filepath_or_buffer=file.file_path,
             sep=file.sep,
             header=0,
-            names=None,
-            compression=None,
+            names=file.names,
+            compression=file.compression,
             dtype=file.dtype,
             encoding=file.encoding,
         )
@@ -129,10 +181,14 @@ class DataPipeline:
             self.sqlite_db._load_to_db(data_frame=file._data_frame)
 
     def run_pipeline(self) -> None:
-        print(f"Running pipeling for {self.data_source.url} ....")
+        print(f"Running pipeling for DataSourece: {self.data_source.data_name} ....")
         file_path = self._extract_data()
-        for item in self.data_source.files:
-            item.file_path = os.path.join(os.getcwd(), file_path, item.file_name)
+        tqdm_files = tqdm(self.data_source.files)
+        for item in tqdm_files:
+            tqdm_files.set_description(f"Processing {item.file_name}")
+            item.file_path = os.path.join(file_path, item.file_name)
             item._data_frame = self._transform_data(file=item)
             self._load_data(file=item)
-        shutil.rmtree(file_path)
+            os.remove(self.data_source.files[0].file_path)
+        if self.data_source.source_type != DataSource.DIRECT_READ:
+            shutil.rmtree(file_path)
