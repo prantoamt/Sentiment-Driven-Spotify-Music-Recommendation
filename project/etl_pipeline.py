@@ -63,7 +63,7 @@ if __name__ == "__main__":
     songs_data_source = DataSource(
         url="https://www.kaggle.com/datasets/mrmorj/dataset-of-songs-in-spotify/data",
         source_name=DataSource.KAGGLE_DATA_SOURCE,
-        files=[genres_file],
+        files=(genres_file,),
     )
     songs_pipeline = DataPipeline(
         data_source=songs_data_source,
@@ -93,7 +93,7 @@ if __name__ == "__main__":
     twitter_data_source = DataSource(
         url="https://www.kaggle.com/datasets/saurabhshahane/twitter-sentiment-dataset/",
         source_name=DataSource.KAGGLE_DATA_SOURCE,
-        files=[twitter_file],
+        files=(twitter_file,),
     )
     twitter_pipeline = DataPipeline(
         data_source=twitter_data_source,

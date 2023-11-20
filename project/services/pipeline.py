@@ -79,7 +79,7 @@ class DataSource:
         self,
         url: str,
         source_name: str,
-        files: List[CSVFile],
+        files: Tuple[CSVFile],
     ) -> None:
         self.url = url
         self.source_name = source_name
