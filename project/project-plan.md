@@ -28,20 +28,20 @@ Finally, music will be suggested based on the sentiment score from the social ne
 * Data URL: https://www.kaggle.com/datasets/saurabhshahane/twitter-sentiment-dataset/
 * Data Type: ZIP
 
-The URL will return a ZIP file containing 1 file: "Twitter_Data.csv". There are total 162980 tweets from several users and 2 columns.
+The URL will return a ZIP file containing 1 file: "Twitter_Data.csv". There are total 1,62,980 tweets from several users and 2 columns.
 
 |       Column number     |      Column Name        |      Description        |
 |-------------------------|-------------------------|-------------------------|
 |             0           |      clean_text         |      Tweets             |
 |             1           |      category           |      Sentiments         |
 
-### Datasource1: Music Dataset
+### Datasource2: Music Dataset
 * Metadata URL: https://www.kaggle.com/datasets/edenbd/150k-lyrics-labeled-with-spotify-valence
 * Data URL: https://www.kaggle.com/datasets/edenbd/150k-lyrics-labeled-with-spotify-valence
 * Data Type: ZIP
 
 The URL will return a ZIP file containing 1 file: "labeled_lyrics_cleaned.csv".
-There are total 158353 unique song lyrics in "labeled_lyrics_cleaned.csv" and 5 Columns :
+There are total 1,58,353 unique song lyrics in "labeled_lyrics_cleaned.csv" and 5 Columns :
 
 |       Column number     |      Column Name        |      Description        |
 |-------------------------|-------------------------|-------------------------|
