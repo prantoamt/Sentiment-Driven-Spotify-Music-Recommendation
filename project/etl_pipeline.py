@@ -56,7 +56,7 @@ if __name__ == "__main__":
     genres_file = CSVFile(
         file_name="genres_v2.csv",
         sep=",",
-        names=[],
+        names=None,
         dtype=genres_file_dtype,
         transform=transform_genres,
     )
@@ -88,7 +88,7 @@ if __name__ == "__main__":
     twitter_file = CSVFile(
         file_name="Twitter_Data.csv",
         sep=",",
-        names=[],
+        names=None,
         dtype=twitter_file_dtype,
     )
     twitter_data_source = DataSource(

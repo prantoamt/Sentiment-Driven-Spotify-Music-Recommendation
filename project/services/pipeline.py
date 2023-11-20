@@ -1,6 +1,6 @@
 # Python imports
 import logging
-from typing import Callable, List, Iterable, Tuple, Any
+from typing import Callable, List, Iterable, Tuple, Any, Union
 import shutil
 import os, sys
 import sqlite3
@@ -59,8 +59,8 @@ class CSVFile:
         self,
         file_name: str,
         sep: str,
-        names: List[str],
         dtype: dict,
+        names: Union[List[str], None] = None,
         transform: Callable[[pd.DataFrame], pd.DataFrame] = None,
         file_path=None,
         encoding="utf-8",
@@ -144,7 +144,7 @@ class DataPipeline:
             file.file_path,
             sep=file.sep,
             header=0,
-            names=None,
+            names=file.names,
             compression=None,
             dtype=file.dtype,
             encoding=file.encoding,
