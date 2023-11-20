@@ -63,7 +63,7 @@ if __name__ == "__main__":
     songs_data_source = DataSource(
         data_name="Spotify Songs",
         url="https://www.kaggle.com/datasets/mrmorj/dataset-of-songs-in-spotify/data",
-        source_name=DataSource.KAGGLE_DATA_SOURCE,
+        source_type=DataSource.KAGGLE_DATA_SOURCE,
         files=(genres_file,),
     )
     songs_pipeline = DataPipeline(
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     twitter_data_source = DataSource(
         data_name="Twitter",
         url="https://www.kaggle.com/datasets/saurabhshahane/twitter-sentiment-dataset/",
-        source_name=DataSource.KAGGLE_DATA_SOURCE,
+        source_type=DataSource.KAGGLE_DATA_SOURCE,
         files=(twitter_file,),
     )
     twitter_pipeline = DataPipeline(
@@ -102,3 +102,54 @@ if __name__ == "__main__":
         sqlite_db=twitter_output_db,
     )
     twitter_pipeline.run_pipeline()
+
+    waether_output_db = SQLiteDB(
+        db_name="project.sqlite",
+        table_name="weather",
+        if_exists=SQLiteDB.REPLACE,
+        index=False,
+        method=None,
+        output_directory=data_directory,
+    )
+    weather_file_dtype = {
+        "Date": np.datetime64,
+        "Tavg": np.float32,
+        "Tmin": np.float32,
+        "Tmax": np.float32,
+        "Prcp": np.float32,
+        "Snow": np.float32,
+        "Wdir": np.float32,
+        "Wspd": np.float32,
+        "Wpgt": np.float32,
+        "Pres": np.float32,
+        "Tsun": np.float32,
+    }
+    weather_file = CSVFile(
+        file_name="48042.csv",
+        sep=",",
+        names=[
+            "Date",
+            "Tavg",
+            "Tmin",
+            "Tmax",
+            "Prcp",
+            "Snow",
+            "Wdir",
+            "Wspd",
+            "Wpgt",
+            "Pres",
+            "Tsun",
+        ],
+        dtype=weather_file_dtype,
+    )
+    weather_data_source = DataSource(
+        data_name="Weather Yagon",
+        url="https://bulk.meteostat.net/v2/daily/48097.csv.gz",
+        source_type=DataSource.GZ_DATA_SOURCE,
+        files=(weather_file,),
+    )
+    weather_pipeline = DataPipeline(
+        data_source=weather_data_source,
+        sqlite_db=waether_output_db,
+    )
+    weather_pipeline.run_pipeline()

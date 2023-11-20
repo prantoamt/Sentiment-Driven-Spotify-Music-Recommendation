@@ -77,17 +77,18 @@ class CSVFile:
 
 class DataSource:
     KAGGLE_DATA_SOURCE = "kaggle"
+    GZ_DATA_SOURCE = "gz"
 
     def __init__(
         self,
         data_name: str,
         url: str,
-        source_name: str,
+        source_type: str,
         files: Tuple[CSVFile],
     ) -> None:
         self.data_name = data_name
         self.url = url
-        self.source_name = source_name
+        self.source_type = source_type
         self.files = files
 
 
@@ -117,7 +118,7 @@ class DataPipeline:
         return file_path
 
     def _extract_data(self) -> str:
-        if self.data_source.source_name == DataSource.KAGGLE_DATA_SOURCE:
+        if self.data_source.source_type == DataSource.KAGGLE_DATA_SOURCE:
             file_path = self._download_kaggle_zip_file()
         return file_path
 
