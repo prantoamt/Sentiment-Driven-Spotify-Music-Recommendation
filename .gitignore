@@ -5,3 +5,4 @@
 venv
 *.sqlite
 *.csv
+kaggle.json
