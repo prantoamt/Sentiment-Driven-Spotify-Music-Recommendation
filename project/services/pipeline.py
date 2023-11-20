@@ -99,6 +99,13 @@ class DataSource:
         self.url = url
         self.source_type = source_type
         self.files = files
+        self._validate()
+
+    def _validate(self):
+        if self.source_type == self.DIRECT_READ and len(self.files) > 1:
+            raise ValueError(
+                "Number of files can not be more than 1 if the source type is direct read!"
+            )
 
 
 class DataPipeline:
