@@ -80,12 +80,12 @@ class DataSource:
 
     def __init__(
         self,
-        name: str,
+        data_name: str,
         url: str,
         source_name: str,
         files: Tuple[CSVFile],
     ) -> None:
-        self.name = name
+        self.data_name = data_name
         self.url = url
         self.source_name = source_name
         self.files = files
@@ -140,7 +140,7 @@ class DataPipeline:
             self.sqlite_db._load_to_db(data_frame=file._data_frame)
 
     def run_pipeline(self) -> None:
-        print(f"Running pipeling for {self.data_source.name} ....")
+        print(f"Running pipeling for {self.data_source.data_name} ....")
         file_path = self._extract_data()
         tqdm_files = tqdm(self.data_source.files)
         for item in tqdm_files:
