@@ -61,6 +61,7 @@ if __name__ == "__main__":
         transform=transform_genres,
     )
     songs_data_source = DataSource(
+        name="Spotify Songs",
         url="https://www.kaggle.com/datasets/mrmorj/dataset-of-songs-in-spotify/data",
         source_name=DataSource.KAGGLE_DATA_SOURCE,
         files=(genres_file,),
@@ -91,6 +92,7 @@ if __name__ == "__main__":
         dtype=twitter_file_dtype,
     )
     twitter_data_source = DataSource(
+        name="Twitter",
         url="https://www.kaggle.com/datasets/saurabhshahane/twitter-sentiment-dataset/",
         source_name=DataSource.KAGGLE_DATA_SOURCE,
         files=(twitter_file,),

@@ -5,6 +5,7 @@ import shutil
 import os, sys
 import sqlite3
 from urllib.request import urlretrieve
+from tqdm import tqdm
 
 # Third-party imports
 import pandas as pd
@@ -79,10 +80,12 @@ class DataSource:
 
     def __init__(
         self,
+        name: str,
         url: str,
         source_name: str,
         files: Tuple[CSVFile],
     ) -> None:
+        self.name = name
         self.url = url
         self.source_name = source_name
         self.files = files
@@ -137,9 +140,11 @@ class DataPipeline:
             self.sqlite_db._load_to_db(data_frame=file._data_frame)
 
     def run_pipeline(self) -> None:
-        print(f"Running pipeling for {self.data_source.url} ....")
+        print(f"Running pipeling for {self.data_source.name} ....")
         file_path = self._extract_data()
-        for item in self.data_source.files:
+        tqdm_files = tqdm(self.data_source.files)
+        for item in tqdm_files:
+            tqdm_files.set_description(f"Processing {item.file_name}")
             item.file_path = os.path.join(os.getcwd(), file_path, item.file_name)
             item._data_frame = self._transform_data(file=item)
             self._load_data(file=item)
