@@ -112,7 +112,7 @@ if __name__ == "__main__":
         output_directory=data_directory,
     )
     weather_file_dtype = {
-        "Date": np.datetime64,
+        "Date": str,
         "Tavg": np.float32,
         "Tmin": np.float32,
         "Tmax": np.float32,
@@ -140,6 +140,7 @@ if __name__ == "__main__":
             "Pres",
             "Tsun",
         ],
+        compression=CSVFile.GZIP_COMPRESSION,
         dtype=weather_file_dtype,
     )
     weather_data_source = DataSource(

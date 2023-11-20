@@ -55,6 +55,13 @@ class SQLiteDB:
 
 
 class CSVFile:
+    ZIP_COMPRESSION = "zip"
+    GZIP_COMPRESSION = "gzip"
+    BZIP2_COMPRESSION = "bz2"
+    ZSTD_COMPRESSION = "zstd"
+    XZ_COMPRESSION = "xz"
+    TAR_COMPRESSION = "tar"
+
     def __init__(
         self,
         file_name: str,
@@ -63,6 +70,7 @@ class CSVFile:
         names: Union[List[str], None] = None,
         transform: Callable[[pd.DataFrame], pd.DataFrame] = None,
         file_path=None,
+        compression: str = None,
         encoding="utf-8",
     ) -> None:
         self.file_name = file_name
@@ -71,6 +79,7 @@ class CSVFile:
         self.dtype = dtype
         self._transform = transform
         self.file_path = file_path
+        self.compression = compression
         self.encoding = encoding
         self._data_frame = None
 
@@ -141,11 +150,11 @@ class DataPipeline:
 
     def _transform_data(self, file: CSVFile) -> pd.DataFrame:
         data_frame = pd.read_csv(
-            file.file_path,
+            filepath_or_buffer=file.file_path,
             sep=file.sep,
             header=0,
             names=file.names,
-            compression=None,
+            compression=file.compression,
             dtype=file.dtype,
             encoding=file.encoding,
         )
@@ -158,12 +167,15 @@ class DataPipeline:
             self.sqlite_db._load_to_db(data_frame=file._data_frame)
 
     def run_pipeline(self) -> None:
-        print(f"Running pipeling for {self.data_source.data_name} ....")
+        print(f"Running pipeling for DataSourece: {self.data_source.data_name} ....")
         file_path = self._extract_data()
         tqdm_files = tqdm(self.data_source.files)
         for item in tqdm_files:
             tqdm_files.set_description(f"Processing {item.file_name}")
-            item.file_path = os.path.join(os.getcwd(), file_path, item.file_name)
+            item.file_path = os.path.join(file_path, item.file_name)
             item._data_frame = self._transform_data(file=item)
             self._load_data(file=item)
-        shutil.rmtree(file_path)
+        if self.data_source.source_type != DataSource.DIRECT_READ:
+            shutil.rmtree(file_path)
+        elif self.data_source.source_type == DataSource.DIRECT_READ:
+            os.remove(self.data_source.files[0].file_path)
