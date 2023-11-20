@@ -103,9 +103,7 @@ class DataSource:
 
     def _validate(self):
         if len(self.files == 0):
-            raise ValueError(
-                "Number of files can not be ZERO in any DataSource!"
-            )
+            raise ValueError("Number of files can not be ZERO in any DataSource!")
         if self.source_type == self.DIRECT_READ and len(self.files) > 1:
             raise ValueError(
                 "Number of files can not be more than 1 if the source type is direct read!"
@@ -143,6 +141,11 @@ class DataPipeline:
     def _download_direct_read_file(self) -> str:
         output_dir = self._get_output_dir()
         file_path = os.path.join(output_dir, self.data_source.files[0].file_name)
+
+        if os.path.isfile(file_path):
+            print("Skipping download: the file already exists!")
+            return output_dir
+
         try:
             urlretrieve(url=self.data_source.url, filename=file_path)
         except Exception as e:
