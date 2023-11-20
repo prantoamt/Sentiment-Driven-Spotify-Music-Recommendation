@@ -76,8 +76,8 @@ class CSVFile:
 
 
 class DataSource:
-    KAGGLE_DATA_SOURCE = "kaggle"
-    GZ_DATA_SOURCE = "gz"
+    KAGGLE_DATA = "kaggle"
+    DIRECT_READ = "direct_read"
 
     def __init__(
         self,
@@ -97,10 +97,13 @@ class DataPipeline:
         self.data_source = data_source
         self.sqlite_db = sqlite_db
 
-    def _download_kaggle_zip_file(self) -> None:
+    def _get_output_dir(self):
         output_dir = self.sqlite_db.output_directory if self.sqlite_db else "."
+        return output_dir
+
+    def _download_kaggle_zip_file(self) -> None:
+        output_dir = self._get_output_dir()
         try:
-            # urlretrieve(url=self.data_source.url, filename=output_path)
             od.download(
                 dataset_id_or_url=self.data_source.url,
                 data_dir=output_dir,
@@ -117,9 +120,23 @@ class DataPipeline:
             sys.exit(1)
         return file_path
 
+    def _download_direct_read_file(self) -> str:
+        output_dir = self._get_output_dir()
+        file_path = os.path.join(output_dir, self.data_source.files[0].file_name)
+        try:
+            urlretrieve(url=self.data_source.url, filename=file_path)
+        except Exception as e:
+            logging.error(
+                msg=f"Error while downloading the {self.data_source.files[0].file_name} data: {e}"
+            )
+            sys.exit(1)
+        return output_dir
+
     def _extract_data(self) -> str:
-        if self.data_source.source_type == DataSource.KAGGLE_DATA_SOURCE:
+        if self.data_source.source_type == DataSource.KAGGLE_DATA:
             file_path = self._download_kaggle_zip_file()
+        if self.data_source.source_type == DataSource.DIRECT_READ:
+            file_path = self._download_direct_read_file()
         return file_path
 
     def _transform_data(self, file: CSVFile) -> pd.DataFrame:

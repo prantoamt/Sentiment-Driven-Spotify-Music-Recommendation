@@ -63,7 +63,7 @@ if __name__ == "__main__":
     songs_data_source = DataSource(
         data_name="Spotify Songs",
         url="https://www.kaggle.com/datasets/mrmorj/dataset-of-songs-in-spotify/data",
-        source_type=DataSource.KAGGLE_DATA_SOURCE,
+        source_type=DataSource.KAGGLE_DATA,
         files=(genres_file,),
     )
     songs_pipeline = DataPipeline(
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     twitter_data_source = DataSource(
         data_name="Twitter",
         url="https://www.kaggle.com/datasets/saurabhshahane/twitter-sentiment-dataset/",
-        source_type=DataSource.KAGGLE_DATA_SOURCE,
+        source_type=DataSource.KAGGLE_DATA,
         files=(twitter_file,),
     )
     twitter_pipeline = DataPipeline(
@@ -145,7 +145,7 @@ if __name__ == "__main__":
     weather_data_source = DataSource(
         data_name="Weather Yagon",
         url="https://bulk.meteostat.net/v2/daily/48097.csv.gz",
-        source_type=DataSource.GZ_DATA_SOURCE,
+        source_type=DataSource.DIRECT_READ,
         files=(weather_file,),
     )
     weather_pipeline = DataPipeline(
