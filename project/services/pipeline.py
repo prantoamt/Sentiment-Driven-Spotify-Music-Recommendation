@@ -108,28 +108,24 @@ class DataSource:
             raise ValueError(
                 "Number of files can not be more than 1 if the source type is direct read!"
             )
-
-
-class DataPipeline:
-    def __init__(self, data_source: DataSource, sqlite_db: SQLiteDB = None) -> None:
-        self.data_source = data_source
-        self.sqlite_db = sqlite_db
-
-    def _get_output_dir(self):
-        output_dir = self.sqlite_db.output_directory if self.sqlite_db else "."
-        return output_dir
-
-    def _download_kaggle_zip_file(self) -> None:
-        output_dir = self._get_output_dir()
+    
+    def _download(self, output_dir: str) -> str:
+        if self.source_type == DataSource.KAGGLE_DATA:
+            file_path = self._download_kaggle_zip_file(output_dir=output_dir)
+        if self.source_type == DataSource.DIRECT_READ:
+            file_path = self._download_direct_read_file()
+        return file_path
+    
+    def _download_kaggle_zip_file(self, output_dir: str) -> None:
         try:
             od.download(
-                dataset_id_or_url=self.data_source.url,
+                dataset_id_or_url=self.url,
                 data_dir=output_dir,
                 force=False,
                 dry_run=False,
             )
             dataset_id = od.utils.kaggle_direct.get_kaggle_dataset_id(
-                dataset_id_or_url=self.data_source.url
+                dataset_id_or_url=self.url
             )
             id = dataset_id.split("/")[1]
             file_path = os.path.join(output_dir, id)
@@ -137,30 +133,30 @@ class DataPipeline:
             logging.error(msg=f"Error while downloading kaggle data: {e}")
             sys.exit(1)
         return file_path
-
-    def _download_direct_read_file(self) -> str:
-        output_dir = self._get_output_dir()
-        file_path = os.path.join(output_dir, self.data_source.files[0].file_name)
-
+    
+    def _download_direct_read_file(self, output_dir: str) -> str:
+        file_path = os.path.join(output_dir, self.files[0].file_name)
         if os.path.isfile(file_path):
             print("Skipping download: the file already exists!")
             return output_dir
-
         try:
-            urlretrieve(url=self.data_source.url, filename=file_path)
+            urlretrieve(url=self.url, filename=file_path)
         except Exception as e:
             logging.error(
-                msg=f"Error while downloading the {self.data_source.files[0].file_name} data: {e}"
+                msg=f"Error while downloading the {self.files[0].file_name} data: {e}"
             )
             sys.exit(1)
         return output_dir
 
+
+class ETLPipeline:
+    def __init__(self, data_source: DataSource, sqlite_db: SQLiteDB = None) -> None:
+        self.data_source = data_source
+        self.sqlite_db = sqlite_db
+
     def _extract_data(self) -> str:
-        if self.data_source.source_type == DataSource.KAGGLE_DATA:
-            file_path = self._download_kaggle_zip_file()
-        if self.data_source.source_type == DataSource.DIRECT_READ:
-            file_path = self._download_direct_read_file()
-        return file_path
+        output_dir = self.sqlite_db.output_directory if self.sqlite_db else "."
+        return self.data_source._download(output_dir=output_dir)
 
     def _transform_data(self, file: CSVFile) -> pd.DataFrame:
         data_frame = pd.read_csv(
