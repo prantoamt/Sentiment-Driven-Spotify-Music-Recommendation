@@ -21,7 +21,7 @@ class SQLiteDB:
         index: bool,
         output_directory: str,
         method: Callable[
-            [pd.DataFrame, sqlite3.Connection, List, Iterable[Tuple[Any]]]
+            [pd.DataFrame, sqlite3.Connection, List, Iterable[Tuple[Any]]], None
         ] = None,
     ) -> None:
         self.db_name = db_name
@@ -52,7 +52,7 @@ class CSVFile:
         self,
         file_name: str,
         sep: str,
-        names: list[str],
+        names: List[str],
         dtype: dict,
         transform: Callable[[pd.DataFrame], pd.DataFrame] = None,
         file_path=None,
@@ -75,7 +75,7 @@ class DataSource:
         self,
         url: str,
         source_name: str,
-        files: list[CSVFile],
+        files: List[CSVFile],
     ) -> None:
         self.url = url
         self.source_name = source_name
