@@ -32,11 +32,17 @@ if __name__ == "__main__":
         "label": np.float64,
     }
 
+    def transform_lyrics(data_frame: pd.DataFrame):
+        data_frame = data_frame.drop(columns=data_frame.columns[0], axis=1)
+        data_frame = data_frame.rename(columns={"seq": "lyrics"})
+        return data_frame
+
     songs_file = CSVFile(
         file_name="labeled_lyrics_cleaned.csv",
         sep=",",
         names=None,
         dtype=songs_file_dtype,
+        transform=transform_lyrics,
     )
     songs_data_source = DataSource(
         data_name="Song lyrics",
