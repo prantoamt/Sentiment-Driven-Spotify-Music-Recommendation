@@ -16,54 +16,43 @@ from services.pipeline import (
 if __name__ == "__main__":
     data_directory = os.path.join(os.getcwd(), "data")
     # Songs Pipeline
-    genres_output_db = SQLiteDB(
+    songs_output_db = SQLiteDB(
         db_name="project.sqlite",
-        table_name="genres",
+        table_name="song_lyrics",
         if_exists=SQLiteDB.REPLACE,
         index=False,
         method=None,
         output_directory=data_directory,
     )
-    genres_file_dtype = {
-        "danceability": np.float64,
-        "energy": np.float64,
-        "key": "Int64",
-        "loudness": np.float64,
-        "mode": "Int64",
-        "speechiness": np.float64,
-        "acousticness": np.float64,
-        "instrumentalness": np.float64,
-        "liveness": np.float64,
-        "valence": np.float64,
-        "tempo": np.float64,
-        "type": str,
-        "id": str,
-        "uri": str,
-        "track_href": str,
-        "analysis_url": str,
-        "duration_ms": "Int64",
-        "time_signature": "Int64",
-        "genre": str,
-        "song_name": str,
-        "Unnamed: 0": np.float64,
-        "title": str,
+    songs_file_dtype = {
+        "#": "Int64",
+        "artist": str,
+        "seq": str,
+        "song": str,
+        "label": np.float64,
     }
 
-    genres_file = CSVFile(
-        file_name="genres_v2.csv",
+    def transform_lyrics(data_frame: pd.DataFrame):
+        data_frame = data_frame.drop(columns=data_frame.columns[0], axis=1)
+        data_frame = data_frame.rename(columns={"seq": "lyrics"})
+        return data_frame
+
+    songs_file = CSVFile(
+        file_name="labeled_lyrics_cleaned.csv",
         sep=",",
         names=None,
-        dtype=genres_file_dtype,
+        dtype=songs_file_dtype,
+        transform=transform_lyrics,
     )
     songs_data_source = DataSource(
-        data_name="Spotify Songs",
-        url="https://www.kaggle.com/datasets/mrmorj/dataset-of-songs-in-spotify/data",
+        data_name="Song lyrics",
+        url="https://www.kaggle.com/datasets/edenbd/150k-lyrics-labeled-with-spotify-valence",
         source_type=DataSource.KAGGLE_DATA,
-        files=(genres_file,),
+        files=(songs_file,),
     )
     songs_pipeline = DataPipeline(
         data_source=songs_data_source,
-        sqlite_db=genres_output_db,
+        sqlite_db=songs_output_db,
     )
     songs_pipeline.run_pipeline()
 
