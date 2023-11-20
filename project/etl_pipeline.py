@@ -7,7 +7,7 @@ import pandas as pd
 
 # Self imports6
 from services.pipeline import (
-    DataPipeline,
+    ETLPipeline,
     DataSource,
     CSVFile,
     SQLiteDB,
@@ -50,7 +50,7 @@ if __name__ == "__main__":
         source_type=DataSource.KAGGLE_DATA,
         files=(songs_file,),
     )
-    songs_pipeline = DataPipeline(
+    songs_pipeline = ETLPipeline(
         data_source=songs_data_source,
         sqlite_db=songs_output_db,
     )
@@ -81,7 +81,7 @@ if __name__ == "__main__":
         source_type=DataSource.KAGGLE_DATA,
         files=(twitter_file,),
     )
-    twitter_pipeline = DataPipeline(
+    twitter_pipeline = ETLPipeline(
         data_source=twitter_data_source,
         sqlite_db=twitter_output_db,
     )

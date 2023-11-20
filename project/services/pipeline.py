@@ -149,7 +149,7 @@ class DataSource:
         return output_dir
 
 
-class DataPipeline:
+class ETLPipeline:
     def __init__(self, data_source: DataSource, sqlite_db: SQLiteDB = None) -> None:
         self.data_source = data_source
         self.sqlite_db = sqlite_db
