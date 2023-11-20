@@ -24,24 +24,33 @@ Finally, music will be suggested based on the sentiment score from the social ne
 <!-- Describe each datasources you plan to use in a section. Use the prefic "DatasourceX" where X is the id of the datasource. -->
 
 ### Datasource1: Twitter Dataset
-* Metadata URL: http://help.sentiment140.com/for-students/
-* Data URL: http://cs.stanford.edu/people/alecmgo/trainingandtestdata.zip
-* Data Type: CSV
+* Metadata URL: https://www.kaggle.com/datasets/saurabhshahane/twitter-sentiment-dataset/
+* Data URL: https://www.kaggle.com/datasets/saurabhshahane/twitter-sentiment-dataset/
+* Data Type: ZIP
 
-The data is a CSV with emoticons removed. Data file format has 6 fields:
-* 0 - the polarity of the tweet (0 = negative, 2 = neutral, 4 = positive) (We will be calculating our own polarity and compare the score)
-* 1 - the id of the tweet (2087)
-* 2 - the date of the tweet (Sat May 16 23:58:44 UTC 2009)
-* 3 - the query (lyx). If there is no query, then this value is NO_QUERY.
-* 4 - the user that tweeted (robotickilldozr)
-* 5 - the text of the tweet (Lyx is cool)
+The URL will return a ZIP file containing 1 file: "Twitter_Data.csv". There are total 162980 tweets from several users and 2 columns.
+
+|       Column number     |      Column Name        |      Description        |
+|-------------------------|-------------------------|-------------------------|
+|             0           |      clean_text         |      Tweets             |
+|             1           |      category           |      Sentiments         |
 
 ### Datasource1: Music Dataset
-* Metadata URL: https://www.kaggle.com/datasets/mrmorj/dataset-of-songs-in-spotify/data
-* Data URL: https://www.kaggle.com/datasets/mrmorj/dataset-of-songs-in-spotify/download?datasetVersionNumber=1
-* Data Type: CSV
+* Metadata URL: https://www.kaggle.com/datasets/edenbd/150k-lyrics-labeled-with-spotify-valence
+* Data URL: https://www.kaggle.com/datasets/edenbd/150k-lyrics-labeled-with-spotify-valence
+* Data Type: ZIP
 
-The full list of genres included in the CSV are Trap, Techno, Techhouse, Trance, Psytrance, Dark Trap, DnB (drums and bass), Hardstyle, Underground Rap, Trap Metal, Emo, Rap, RnB, Pop and Hiphop.
+The URL will return a ZIP file containing 1 file: "labeled_lyrics_cleaned.csv".
+There are total 158353 unique song lyrics in "labeled_lyrics_cleaned.csv" and 5 Columns :
+
+|       Column number     |      Column Name        |      Description        |
+|-------------------------|-------------------------|-------------------------|
+|             0           |      #                  |      Song number        |
+|             1           |      artist             |      Artist name        |
+|             2           |      seq                |      Song's lyrics      |
+|             3           |      song               |      Song title         |
+|             4           |      label              |      Spotify valence (Positiveness) feature attribute for this song |
+
 
 ## Work Packages
 
