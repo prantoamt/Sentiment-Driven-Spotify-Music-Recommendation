@@ -1,4 +1,5 @@
 # Python imports
+import logging
 from typing import Callable, List, Iterable, Tuple, Any
 import shutil
 import os, sys
@@ -48,6 +49,7 @@ class SQLiteDB:
             )
             connection.close()
         except sqlite3.Error as e:
+            logging.error(msg=f"Error while creating SQLite DB: {e}")
             sys.exit(1)
 
 
@@ -107,7 +109,7 @@ class DataPipeline:
             id = dataset_id.split("/")[1]
             file_path = os.path.join(output_dir, id)
         except Exception as e:
-            print(e)
+            logging.error(msg=f"Error while downloading kaggle data: {e}")
             sys.exit(1)
         return file_path
 
