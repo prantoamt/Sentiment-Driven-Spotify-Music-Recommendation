@@ -102,6 +102,10 @@ class DataSource:
         self._validate()
 
     def _validate(self):
+        if len(self.files == 0):
+            raise ValueError(
+                "Number of files can not be ZERO in any DataSource!"
+            )
         if self.source_type == self.DIRECT_READ and len(self.files) > 1:
             raise ValueError(
                 "Number of files can not be more than 1 if the source type is direct read!"
