@@ -49,16 +49,11 @@ if __name__ == "__main__":
         "title": str,
     }
 
-    def transform_genres(data_frame: pd.DataFrame):
-        # data_frame=data_frame.dropna(axis=0)
-        return data_frame
-
     genres_file = CSVFile(
         file_name="genres_v2.csv",
         sep=",",
         names=None,
         dtype=genres_file_dtype,
-        transform=transform_genres,
     )
     songs_data_source = DataSource(
         data_name="Spotify Songs",
@@ -102,55 +97,3 @@ if __name__ == "__main__":
         sqlite_db=twitter_output_db,
     )
     twitter_pipeline.run_pipeline()
-
-    waether_output_db = SQLiteDB(
-        db_name="project.sqlite",
-        table_name="weather",
-        if_exists=SQLiteDB.REPLACE,
-        index=False,
-        method=None,
-        output_directory=data_directory,
-    )
-    weather_file_dtype = {
-        "Date": str,
-        "Tavg": np.float32,
-        "Tmin": np.float32,
-        "Tmax": np.float32,
-        "Prcp": np.float32,
-        "Snow": np.float32,
-        "Wdir": np.float32,
-        "Wspd": np.float32,
-        "Wpgt": np.float32,
-        "Pres": np.float32,
-        "Tsun": np.float32,
-    }
-    weather_file = CSVFile(
-        file_name="48042.csv",
-        sep=",",
-        names=[
-            "Date",
-            "Tavg",
-            "Tmin",
-            "Tmax",
-            "Prcp",
-            "Snow",
-            "Wdir",
-            "Wspd",
-            "Wpgt",
-            "Pres",
-            "Tsun",
-        ],
-        compression=CSVFile.GZIP_COMPRESSION,
-        dtype=weather_file_dtype,
-    )
-    weather_data_source = DataSource(
-        data_name="Weather Yagon",
-        url="https://bulk.meteostat.net/v2/daily/48097.csv.gz",
-        source_type=DataSource.DIRECT_READ,
-        files=(weather_file,),
-    )
-    weather_pipeline = DataPipeline(
-        data_source=weather_data_source,
-        sqlite_db=waether_output_db,
-    )
-    weather_pipeline.run_pipeline()

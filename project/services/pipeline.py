@@ -102,7 +102,7 @@ class DataSource:
         self._validate()
 
     def _validate(self):
-        if len(self.files == 0):
+        if len(self.files) == 0:
             raise ValueError("Number of files can not be ZERO in any DataSource!")
         if self.source_type == self.DIRECT_READ and len(self.files) > 1:
             raise ValueError(
@@ -189,7 +189,6 @@ class DataPipeline:
             item.file_path = os.path.join(file_path, item.file_name)
             item._data_frame = self._transform_data(file=item)
             self._load_data(file=item)
+            os.remove(self.data_source.files[0].file_path)
         if self.data_source.source_type != DataSource.DIRECT_READ:
             shutil.rmtree(file_path)
-        elif self.data_source.source_type == DataSource.DIRECT_READ:
-            os.remove(self.data_source.files[0].file_path)
