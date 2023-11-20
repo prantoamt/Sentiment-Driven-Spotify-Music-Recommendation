@@ -1,5 +1,5 @@
 # Python imports
-from typing import Callable
+from typing import Callable, List, Iterable, Tuple, Any
 import shutil
 import os, sys
 import sqlite3
@@ -19,15 +19,17 @@ class SQLiteDB:
         table_name: str,
         if_exists: str,
         index: bool,
-        method: Callable,
         output_directory: str,
+        method: Callable[
+            [pd.DataFrame, sqlite3.Connection, List, Iterable[Tuple[Any]]]
+        ] = None,
     ) -> None:
         self.db_name = db_name
         self.table_name = table_name
         self.if_exists = if_exists
         self.index = index
-        self.method = method
         self.output_directory = output_directory
+        self.method = method
 
     def _load_to_db(self, data_frame: pd.DataFrame):
         db_path = os.path.join(self.output_directory, self.db_name)
