@@ -13,6 +13,10 @@ import opendatasets as od
 
 
 class SQLiteDB:
+    FAIL = "fail"
+    REPLACE = "replace"
+    APPEND = "append"
+
     def __init__(
         self,
         db_name: str,

@@ -19,7 +19,7 @@ if __name__ == "__main__":
     genres_output_db = SQLiteDB(
         db_name="project.sqlite",
         table_name="genres",
-        if_exists="replace",
+        if_exists=SQLiteDB.REPLACE,
         index=False,
         method=None,
         output_directory=data_directory,
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     twitter_output_db = SQLiteDB(
         db_name="project.sqlite",
         table_name="tweets",
-        if_exists="replace",
+        if_exists=SQLiteDB.REPLACE,
         index=False,
         method=None,
         output_directory=data_directory,
