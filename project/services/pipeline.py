@@ -177,14 +177,24 @@ class ETLPipeline:
             self.sqlite_db._load_to_db(data_frame=file._data_frame)
 
     def run_pipeline(self) -> None:
-        print(f"Running pipeling for DataSourece: {self.data_source.data_name} ....")
         file_path = self._extract_data()
-        tqdm_files = tqdm(self.data_source.files)
+        tqdm_files = tqdm(iterable=self.data_source.files, total=len(self.data_source.files))
         for item in tqdm_files:
-            tqdm_files.set_description(f"Processing {item.file_name}")
+            tqdm_files.write(f"Processing {item.file_name}:")
             item.file_path = os.path.join(file_path, item.file_name)
             item._data_frame = self._transform_data(file=item)
             self._load_data(file=item)
             os.remove(self.data_source.files[0].file_path)
         if self.data_source.source_type != DataSource.DIRECT_READ:
             shutil.rmtree(file_path)
+
+
+class ETLQueue:
+    def __init__(self, etl_pipelines: Tuple[ETLPipeline]) -> None:
+        self.etl_pipelines = etl_pipelines
+    
+    def run(self) -> None:
+        etl_tqdm = tqdm(self.etl_pipelines, total=len(self.etl_pipelines))
+        for pipeline in etl_tqdm:
+            etl_tqdm.write(f"Running {pipeline.data_source.data_name} pipeline:")
+            pipeline.run_pipeline()

@@ -11,6 +11,7 @@ from services.pipeline import (
     DataSource,
     CSVFile,
     SQLiteDB,
+    ETLQueue,
 )
 
 if __name__ == "__main__":
@@ -54,7 +55,6 @@ if __name__ == "__main__":
         data_source=songs_data_source,
         sqlite_db=songs_output_db,
     )
-    songs_pipeline.run_pipeline()
 
     # Twitter Pipeline
     twitter_output_db = SQLiteDB(
@@ -85,4 +85,7 @@ if __name__ == "__main__":
         data_source=twitter_data_source,
         sqlite_db=twitter_output_db,
     )
-    twitter_pipeline.run_pipeline()
+
+
+    pipeline_queue = ETLQueue(etl_pipelines=(songs_pipeline, twitter_pipeline))
+    pipeline_queue.run()
