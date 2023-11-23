@@ -14,16 +14,16 @@ from services.pipeline import (
     ETLQueue,
 )
 
-if __name__ == "__main__":
-    data_directory = os.path.join(os.getcwd(), "data")
-    # Songs Pipeline
+DATA_DIRECTORY = os.path.join(os.getcwd(), "data")
+
+def construct_songs_pipeline() -> ETLPipeline:
     songs_output_db = SQLiteDB(
         db_name="project.sqlite",
         table_name="song_lyrics",
         if_exists=SQLiteDB.REPLACE,
         index=False,
         method=None,
-        output_directory=data_directory,
+        output_directory=DATA_DIRECTORY,
     )
     songs_file_dtype = {
         "#": "Int64",
@@ -55,15 +55,17 @@ if __name__ == "__main__":
         data_source=songs_data_source,
         sqlite_db=songs_output_db,
     )
+    return songs_pipeline
 
-    # Twitter Pipeline
+
+def construct_twitter_pipeline() -> ETLPipeline:
     twitter_output_db = SQLiteDB(
         db_name="project.sqlite",
         table_name="tweets",
         if_exists=SQLiteDB.REPLACE,
         index=False,
         method=None,
-        output_directory=data_directory,
+        output_directory=DATA_DIRECTORY,
     )
     twitter_file_dtype = {
         "clean_text": str,
@@ -85,5 +87,10 @@ if __name__ == "__main__":
         data_source=twitter_data_source,
         sqlite_db=twitter_output_db,
     )
+    return twitter_pipeline
 
+
+if __name__ == "__main__":
+    songs_pipeline = construct_songs_pipeline()
+    twitter_pipeline = construct_twitter_pipeline()
     pipeline_queue = ETLQueue(etl_pipelines=(songs_pipeline, twitter_pipeline)).run()
