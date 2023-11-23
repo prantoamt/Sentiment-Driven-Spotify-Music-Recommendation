@@ -86,6 +86,4 @@ if __name__ == "__main__":
         sqlite_db=twitter_output_db,
     )
 
-
-    pipeline_queue = ETLQueue(etl_pipelines=(songs_pipeline, twitter_pipeline))
-    pipeline_queue.run()
+    pipeline_queue = ETLQueue(etl_pipelines=(songs_pipeline, twitter_pipeline)).run()
