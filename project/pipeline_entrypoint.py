@@ -14,6 +14,7 @@ from services.pipeline import (
     ETLQueue,
 )
 
+DATA_DIRECTORY = os.path.join(os.getcwd(), "data")
 
 def construct_songs_pipeline() -> ETLPipeline:
     songs_output_db = SQLiteDB(
@@ -22,7 +23,7 @@ def construct_songs_pipeline() -> ETLPipeline:
         if_exists=SQLiteDB.REPLACE,
         index=False,
         method=None,
-        output_directory=data_directory,
+        output_directory=DATA_DIRECTORY,
     )
     songs_file_dtype = {
         "#": "Int64",
@@ -64,7 +65,7 @@ def construct_twitter_pipeline() -> ETLPipeline:
         if_exists=SQLiteDB.REPLACE,
         index=False,
         method=None,
-        output_directory=data_directory,
+        output_directory=DATA_DIRECTORY,
     )
     twitter_file_dtype = {
         "clean_text": str,
@@ -90,7 +91,6 @@ def construct_twitter_pipeline() -> ETLPipeline:
 
 
 if __name__ == "__main__":
-    data_directory = os.path.join(os.getcwd(), "data")
     songs_pipeline = construct_songs_pipeline()
     twitter_pipeline = construct_twitter_pipeline()
     pipeline_queue = ETLQueue(etl_pipelines=(songs_pipeline, twitter_pipeline)).run()
