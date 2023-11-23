@@ -215,9 +215,7 @@ class ETLQueue:
         self.etl_pipelines = etl_pipelines
 
     def run(self) -> None:
-        etl_tqdm = tqdm(
-            self.etl_pipelines, total=len(self.etl_pipelines)
-        )
+        etl_tqdm = tqdm(self.etl_pipelines, total=len(self.etl_pipelines))
         for pipeline in etl_tqdm:
             etl_tqdm.set_description(
                 desc=f"Running {pipeline.data_source.data_name} pipeline"
