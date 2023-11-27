@@ -38,16 +38,6 @@ pipeline BahnhofPipeline {
         ];
     }
 
-    constraint ValidValues oftype LengthConstraint {
-        minLength: 1;
-        maxLength:100;
-    }
-
-    valuetype validtext oftype text{
-        constraints: [
-            ValidValues,
-        ];
-    }
 
 
 
@@ -55,15 +45,15 @@ pipeline BahnhofPipeline {
         header: true;
         columns: [
             "EVA_NR" oftype integer,
-            "DS100" oftype validtext,
+            "DS100" oftype text,
             "IFOPT" oftype ifopt,
-            "NAME" oftype validtext,
+            "NAME" oftype text,
             "Verkehr" oftype verkehr,
             "Laenge" oftype laengeandbreite,
             "Breite" oftype laengeandbreite,
-            "Betreiber_Name" oftype validtext,
+            "Betreiber_Name" oftype text,
             "Betreiber_Nr" oftype integer,
-            "Status" oftype validtext
+            "Status" oftype text
         ];
     }
 
