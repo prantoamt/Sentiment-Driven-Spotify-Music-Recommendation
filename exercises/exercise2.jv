@@ -70,7 +70,7 @@ pipeline BahnhofPipeline {
 
     block BahnhofLoader oftype SQLiteLoader {
         table: "trainstops";
-        file: "./data/trainstops.sqlite";
+        file: "./trainstops.sqlite";
     }
 
     BahnCSVExtractor
