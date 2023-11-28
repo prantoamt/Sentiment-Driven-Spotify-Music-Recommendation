@@ -48,7 +48,7 @@ pipeline BahnhofPipeline {
     valuetype nonemptytext oftype text {
         constraints: [
             NonEmptyTextLength,
-        ]
+        ];
     }
 
     block BahnhofTableInterpreter oftype TableInterpreter {
