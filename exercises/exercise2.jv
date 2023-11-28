@@ -19,8 +19,10 @@ pipeline BahnhofPipeline {
         ];
     }
     
-    constraint LaengeAndBreiteAllowedRange on decimal:
-        value >= -90 and value <= 90;
+    constraint LaengeAndBreiteAllowedRange oftype RangeConstraint {
+        lowerBound: 1;
+        upperBound: 100;
+    }
     
     valuetype laengeandbreite oftype decimal {
         constraints: [
