@@ -20,8 +20,8 @@ pipeline BahnhofPipeline {
     }
     
     constraint LaengeAndBreiteAllowedRange oftype RangeConstraint {
-        lowerBound: 1;
-        upperBound: 100;
+        lowerBound: -90;
+        upperBound: 90;
     }
     
     valuetype laengeandbreite oftype decimal {
@@ -51,10 +51,21 @@ pipeline BahnhofPipeline {
         ];
     }
 
+    constraint allowednumber oftype RangeConstraint {
+        lowerBound: 1;
+        upperBound: 9007199254740991;
+    }
+
+    valuetype nonemptynumber oftype integer {
+        constraints: [
+            allowednumber,
+        ];
+    }
+
     block BahnhofTableInterpreter oftype TableInterpreter {
         header: true;
         columns: [
-            "EVA_NR" oftype integer,
+            "EVA_NR" oftype nonemptynumber,
             "DS100" oftype nonemptytext,
             "IFOPT" oftype ifopt,
             "NAME" oftype nonemptytext,
@@ -62,7 +73,7 @@ pipeline BahnhofPipeline {
             "Laenge" oftype laengeandbreite,
             "Breite" oftype laengeandbreite,
             "Betreiber_Name" oftype nonemptytext,
-            "Betreiber_Nr" oftype integer,
+            "Betreiber_Nr" oftype nonemptynumber,
             "Status" oftype nonemptytext
         ];
     }
