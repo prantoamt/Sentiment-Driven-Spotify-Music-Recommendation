@@ -111,3 +111,14 @@ def sqlite_loader(**kwargs):
         )
         return sqlite_loader
     return _sqlite_loader
+
+@pytest.fixture
+def mock_data_frame():
+    data_frame = pd.DataFrame(
+        {'float': [1.0],
+        'int': [1],
+        'datetime': [pd.Timestamp('20180310')],
+        'string': ['foo']
+        },
+    )
+    yield data_frame.astype(str)
