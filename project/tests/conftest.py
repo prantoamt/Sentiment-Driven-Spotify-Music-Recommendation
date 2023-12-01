@@ -94,3 +94,20 @@ def twitter_pipeline():
         extractor=twitter_data_extractor,
     )
     yield twitter_pipeline
+    
+@pytest.fixture
+def sqlite_loader(**kwargs):
+    def _sqlite_loader(**kwargs):
+        db_name = "test_sqlite_loader.sqlite"
+        table_name = "loader_table"
+        if_exists = kwargs.pop("if_exists")
+        sqlite_loader = SQLiteLoader(
+            db_name=db_name,
+            table_name=table_name,
+            if_exists=if_exists,
+            index=None,
+            method=None,
+            output_directory=DATA_DIRECTORY,
+        )
+        return sqlite_loader
+    return _sqlite_loader
