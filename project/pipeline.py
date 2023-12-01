@@ -6,10 +6,10 @@ import numpy as np
 import pandas as pd
 
 # Self imports6
-from services.pipeline import (
+from etl_pipeline_runner.services import (
     ETLPipeline,
     DataExtractor,
-    CSVInterpreter,
+    CSVHandler,
     SQLiteLoader,
     ETLQueue,
 )
@@ -38,22 +38,22 @@ def construct_songs_pipeline() -> ETLPipeline:
         data_frame = data_frame.rename(columns={"seq": "lyrics"})
         return data_frame
 
-    songs_interpreter = CSVInterpreter(
+    songs_csv_handler = CSVHandler(
         file_name="labeled_lyrics_cleaned.csv",
         sep=",",
         names=None,
         dtype=songs_file_dtype,
-        transform=transform_lyrics,
+        transformer=transform_lyrics,
+        loader=songs_output_db
     )
-    songs_data_source = DataExtractor(
+    songs_data_extractor = DataExtractor(
         data_name="Song lyrics",
         url="https://www.kaggle.com/datasets/edenbd/150k-lyrics-labeled-with-spotify-valence",
         type=DataExtractor.KAGGLE_ARCHIVE,
-        interpreters=(songs_interpreter,),
+        file_handlers=(songs_csv_handler,),
     )
     songs_pipeline = ETLPipeline(
-        data_extractor=songs_data_source,
-        loader=songs_output_db,
+        extractor=songs_data_extractor,
     )
     return songs_pipeline
 
@@ -71,21 +71,22 @@ def construct_twitter_pipeline() -> ETLPipeline:
         "clean_text": str,
         "category": "Int64",
     }
-    twitter_interpreter = CSVInterpreter(
+    twitter_csv_handler = CSVHandler(
         file_name="Twitter_Data.csv",
         sep=",",
         names=None,
         dtype=twitter_file_dtype,
+        transformer=None,
+        loader=twitter_output_db
     )
-    twitter_data_source = DataExtractor(
+    twitter_data_extractor = DataExtractor(
         data_name="Twitter",
         url="https://www.kaggle.com/datasets/saurabhshahane/twitter-sentiment-dataset/",
         type=DataExtractor.KAGGLE_ARCHIVE,
-        interpreters=(twitter_interpreter,),
+        file_handlers=(twitter_csv_handler,),
     )
     twitter_pipeline = ETLPipeline(
-        data_extractor=twitter_data_source,
-        loader=twitter_output_db,
+        extractor=twitter_data_extractor,
     )
     return twitter_pipeline
 
