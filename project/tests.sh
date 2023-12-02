@@ -8,3 +8,6 @@ pytest project/tests/tests_system.py
 #   2. put kaggle.json in root directory.
 #   3. run chmod +x ./project/tests.sh
 #   4. run ./project/tests.sh
+
+# I have used etl-pipeline-runner python package to build the pipeline. The unit
+# test cases of the pipeline components are written here: https://github.com/prantoamt/etl-pipeline-runner/tree/main/tests
