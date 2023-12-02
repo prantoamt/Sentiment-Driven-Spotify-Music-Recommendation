@@ -72,7 +72,7 @@ def construct_twitter_pipeline() -> ETLPipeline:
         "category": "Int64",
     }
     def transform_twitter(data_frame: pd.DataFrame):
-        data_frame = data_frame.rename(columns={"clear_text": "tweets"})
+        data_frame = data_frame.rename(columns={"clean_text": "tweets"})
         return data_frame
     
     twitter_csv_handler = CSVHandler(
