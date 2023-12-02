@@ -122,3 +122,16 @@ def mock_data_frame():
         },
     )
     yield data_frame.astype(str)
+    
+
+@pytest.fixture
+def csv_handler():
+    csv_handler = CSVHandler(
+        file_name="demo.csv",
+        sep=",",
+        names=None,
+        dtype=str,
+        transformer=None,
+        loader=None
+    )
+    yield csv_handler
