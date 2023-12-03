@@ -49,6 +49,7 @@ def construct_songs_pipeline() -> ETLPipeline:
     def transform_lyrics(data_frame: pd.DataFrame):
         data_frame = data_frame.drop(columns=data_frame.columns[0], axis=1)
         data_frame = data_frame.rename(columns={"seq": "lyrics"})
+        data_frame["processed_lyrics"] = data_frame["lyrics"].apply(preprocess)
         return data_frame
 
     songs_csv_handler = CSVHandler(
