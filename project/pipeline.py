@@ -1,9 +1,12 @@
 # Python imports
-import os
+import os, re
 
 # Third-party imports
 import numpy as np
 import pandas as pd
+from nltk import download as nltkdownload
+from nltk.corpus import stopwords
+from nltk.stem.porter import PorterStemmer
 
 # Self imports6
 from etl_pipeline_runner.services import (
@@ -15,6 +18,16 @@ from etl_pipeline_runner.services import (
 )
 
 DATA_DIRECTORY = os.path.join(os.getcwd(), "data")
+
+nltkdownload("stopwords")
+prot_stem = PorterStemmer()
+def preprocess(data):
+    processed_data = re.sub("[^a-zA-Z]", " ", data)
+    processed_data = processed_data.lower()
+    processed_data = processed_data.split()
+    processed_data = [prot_stem.stem(word) for word in processed_data if word not in stopwords.words("english")]
+    processed_data = " ".join(processed_data)
+    return processed_data
 
 def construct_songs_pipeline() -> ETLPipeline:
     songs_output_db = SQLiteLoader(
@@ -67,25 +80,26 @@ def construct_twitter_pipeline() -> ETLPipeline:
         method=None,
         output_directory=DATA_DIRECTORY,
     )
-    twitter_file_dtype = {
-        "clean_text": str,
-        "category": "Int64",
-    }
+    
     def transform_twitter(data_frame: pd.DataFrame):
-        data_frame = data_frame.rename(columns={"clean_text": "tweets"})
+        data_frame = data_frame.dropna(axis=0)
+        data_frame = data_frame.drop(columns=[data_frame.columns[1], data_frame.columns[2], data_frame.columns[3], data_frame.columns[4]], axis=1)
+        data_frame = data_frame.replace({"target": {4:1}})
+        data_frame["processed_text"] = data_frame["text"].apply(preprocess)
         return data_frame
     
     twitter_csv_handler = CSVHandler(
-        file_name="Twitter_Data.csv",
+        file_name="training.1600000.processed.noemoticon.csv",
         sep=",",
-        names=None,
-        dtype=twitter_file_dtype,
+        names=["target", "id", "date", "flag", "user", "text"],
+        dtype={"target": np.int64, "text": str},
+        encoding="ISO-8859-1",
         transformer=transform_twitter,
         loader=twitter_output_db
     )
     twitter_data_extractor = DataExtractor(
         data_name="Twitter",
-        url="https://www.kaggle.com/datasets/saurabhshahane/twitter-sentiment-dataset/",
+        url="https://www.kaggle.com/datasets/kazanova/sentiment140",
         type=DataExtractor.KAGGLE_ARCHIVE,
         file_handlers=(twitter_csv_handler,),
     )
