@@ -72,25 +72,32 @@ def twitter_pipeline():
         method=None,
         output_directory=DATA_DIRECTORY,
     )
-    twitter_file_dtype = {
-        "clean_text": str,
-        "category": np.float64,
-    }
+    
+    def transform_twitter(data_frame: pd.DataFrame):
+        data_frame = data_frame.dropna(axis=0)
+        data_frame = data_frame.drop(columns=[data_frame.columns[1], data_frame.columns[2], data_frame.columns[3], data_frame.columns[4]], axis=1)
+        data_frame = data_frame.replace({"target": {4:1}})
+        return data_frame
+    
     twitter_csv_handler = CSVHandler(
-        file_name="Twitter_Data.csv",
+        file_name="training.1600000.processed.noemoticon.csv",
         sep=",",
-        names=None,
-        dtype=twitter_file_dtype,
-        transformer=None,
+        names=["target", "id", "date", "flag", "user", "text"],
+        dtype={"target": np.int64, "text": str},
+        encoding="ISO-8859-1",
+        transformer=transform_twitter,
         loader=twitter_output_db
     )
+    
     twitter_data_extractor = DataExtractor(
         data_name="Twitter",
-        url="https://www.kaggle.com/datasets/saurabhshahane/twitter-sentiment-dataset/",
+        url="https://www.kaggle.com/datasets/kazanova/sentiment140",
         type=DataExtractor.KAGGLE_ARCHIVE,
         file_handlers=(twitter_csv_handler,),
     )
+    
     twitter_pipeline = ETLPipeline(
         extractor=twitter_data_extractor,
     )
+    
     yield twitter_pipeline
