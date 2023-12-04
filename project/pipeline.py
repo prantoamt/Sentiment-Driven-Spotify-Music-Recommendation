@@ -22,7 +22,16 @@ DATA_DIRECTORY = os.path.join(os.getcwd(), "data")
 nltkdownload("stopwords")
 prot_stem = PorterStemmer()
 def preprocess(data):
-    processed_data = re.sub("[^a-zA-Z]", " ", data)
+    # @user remove
+    processed_data = re.sub("@\w+", " ", data)
+    # link remove
+    processed_data = re.sub(r'http\S+', '', processed_data)
+    # special character and number remove
+    processed_data = re.sub("[^a-zA-Z]", " ", processed_data)
+    # single character remove
+    processed_data = re.sub(r"\s+[a-zA-Z]\s+", " ", processed_data)
+    # multiple space remove
+    processed_data = re.sub(r"\s+", " ", processed_data)
     processed_data = processed_data.lower()
     processed_data = processed_data.split()
     processed_data = [prot_stem.stem(word) for word in processed_data if word not in stopwords.words("english")]
@@ -113,4 +122,4 @@ def construct_twitter_pipeline() -> ETLPipeline:
 if __name__ == "__main__":
     songs_pipeline = construct_songs_pipeline()
     twitter_pipeline = construct_twitter_pipeline()
-    pipeline_queue = ETLQueue(etl_pipelines=(songs_pipeline, twitter_pipeline)).run()
+    pipeline_queue = ETLQueue(etl_pipelines=(twitter_pipeline, songs_pipeline,)).run()
