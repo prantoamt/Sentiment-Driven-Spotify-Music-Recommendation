@@ -1,12 +1,14 @@
 # Project Plan
 
 ## Title
-Music Recommendation Based on Sentiment.
+Music Recommendation Based on human mood.
 
 ## Main Question
 
 <!-- Think about one main question you want to answer based on the data. -->
-1. Can we recommend music based on humand sentiment?
+1. How does logistic regression performs on sentiment classification?
+2. Can we use transfer learning to classify sentiments on music lyrics?
+3. Can we suggest music based on the sentiment of social media post?
 
 ## Description
 
@@ -15,7 +17,7 @@ Music recommendation based on human sentiment is one of the interesting topics. 
 
 First, social media post and music dataset will be collected from the datasources [Datasource1](#datasource1-twitter-dataset) and, 
 [Datasource2](#datasource2-music-dataset) respectively. After that the texts of both the datasets will be analysed to score sentiments
-with several methodologies. Few pre-trained models as well as libraries e.g NLTK can be used to score sentiments of both dataset.
+with several methodologies.
 
 Finally, music will be suggested based on the sentiment score from the social network post.
 
@@ -24,16 +26,20 @@ Finally, music will be suggested based on the sentiment score from the social ne
 <!-- Describe each datasources you plan to use in a section. Use the prefic "DatasourceX" where X is the id of the datasource. -->
 
 ### Datasource1: Twitter Dataset
-* Metadata URL: https://www.kaggle.com/datasets/saurabhshahane/twitter-sentiment-dataset/
-* Data URL: https://www.kaggle.com/datasets/saurabhshahane/twitter-sentiment-dataset/
+* Metadata URL: https://www.kaggle.com/datasets/kazanova/sentiment140
+* Data URL: https://www.kaggle.com/datasets/kazanova/sentiment140
 * Data Type: ZIP
 
-The URL will return a ZIP file containing 1 file: "Twitter_Data.csv". There are total 1,62,980 tweets from several users and 2 columns.
+The URL will return a ZIP file containing 1 file: "training.1600000.processed.noemoticon.csv". There are total 1.6 million tweets from several users and 6 columns.
 
 |       Column number     |      Column Name        |      Description        |
 |-------------------------|-------------------------|-------------------------|
-|             0           |      clean_text         |      Tweets             |
-|             1           |      category           |      Sentiments         |
+|             0           |      target             |      Sentiment          |
+|             1           |      id                 |      Tweet id           |
+|             2           |      date               |      Tweet date         |
+|             3           |      flag               |      N/A                |
+|             4           |      user               |      User               |
+|             5           |      text               |      Tweet              |
 
 ### Datasource2: Music Dataset
 * Metadata URL: https://www.kaggle.com/datasets/edenbd/150k-lyrics-labeled-with-spotify-valence
@@ -59,7 +65,11 @@ There are total 1,58,353 unique song lyrics in "labeled_lyrics_cleaned.csv" and 
 1. Investigate for interesting dataset [#1][i1]
 2. Write initial Description about the project plan [#2][i2]
 3. Construct ETL Pipeline [#3][i3]
+4. Create test cases for ETL Pipeline [#4][i4]
+4. Explore data for model training and predictions [#5][i5]
 
 [i1]: https://github.com/prantoamt/made-template/issues/1
 [i2]: https://github.com/prantoamt/made-template/issues/2
 [i3]: https://github.com/prantoamt/made-template/issues/8
+[i4]: https://github.com/prantoamt/made-template/issues/15
+[i5]: https://github.com/prantoamt/made-template/issues/16

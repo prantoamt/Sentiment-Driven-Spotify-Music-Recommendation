@@ -5,4 +5,5 @@
 venv
 *.sqlite
 *.csv
+.pytest_cache
 kaggle.json
