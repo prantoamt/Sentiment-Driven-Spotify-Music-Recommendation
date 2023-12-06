@@ -105,8 +105,8 @@ def twitter_pipeline():
 @pytest.fixture
 def mock_tweet_df():
     data = [
-        ["0","1467810369","Mon Apr 06 22:19:45 PDT 2009","NO_QUERY","_TheSpecialOne_","This is a mock tweet with target 0 which contains one @user tag, one link: https://github.com/prantoamt/made-template, and several special characters. For exmaple: # :( :)."],
-        ["4","1467810369","Mon Apr 06 22:19:45 PDT 2009","NO_QUERY","_TheSpecialOne_","This is a mock tweet with target 1 which contains one @user tag, one link: https://github.com/prantoamt/made-template, and several special characters. For exmaple: # :( :)."]
+        [0,"1467810369","Mon Apr 06 22:19:45 PDT 2009","NO_QUERY","_TheSpecialOne_","This is a mock tweet with target 0 which contains one @user tag, one link: https://github.com/prantoamt/made-template, and several special characters. For exmaple: # :( :)."],
+        [4,"1467810369","Mon Apr 06 22:19:45 PDT 2009","NO_QUERY","_TheSpecialOne_","This is another mock tweet with target 1 which contains one @user tag, one link: https://github.com/prantoamt/made-template, and several special characters. For exmaple: # :( :)."]
         ]
     df = pd.DataFrame(
         data=data,

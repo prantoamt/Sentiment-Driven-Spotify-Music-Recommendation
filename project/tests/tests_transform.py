@@ -18,5 +18,8 @@ class TestTransform:
         preprocessed_tweet = construct_twitter_pipeline().extractor.file_handlers[0].transformer(mock_tweet_df)
         assert preprocessed_tweet.shape == (2,3)
         assert list(preprocessed_tweet.columns.values) == ["target", "text", "processed_text"]
+        assert preprocessed_tweet.iloc[0]["target"] == 0
+        assert preprocessed_tweet.iloc[1]["target"] == 1
         assert preprocessed_tweet.iloc[0]["processed_text"] == "mock tweet target contain one tag one link sever special charact exmapl"
+        assert preprocessed_tweet.iloc[1]["processed_text"] == "anoth mock tweet target contain one tag one link sever special charact exmapl"
         
