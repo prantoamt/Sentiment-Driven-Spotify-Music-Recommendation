@@ -6,7 +6,8 @@ import numpy as np
 import pandas as pd
 from nltk import download as nltkdownload
 from nltk.corpus import stopwords
-from nltk.stem.porter import PorterStemmer
+from nltk import word_tokenize
+from nltk.stem import WordNetLemmatizer
 
 # Self imports6
 from etl_pipeline_runner.services import (
@@ -20,7 +21,9 @@ from etl_pipeline_runner.services import (
 DATA_DIRECTORY = os.path.join(os.getcwd(), "data")
 
 nltkdownload("stopwords")
-prot_stem = PorterStemmer()
+nltkdownload('punkt')
+nltkdownload('wordnet')
+wordnet_lemmatizer = WordNetLemmatizer()
 def preprocess(data):
     # @user remove
     processed_data = re.sub("@\w+", " ", data)
@@ -33,8 +36,8 @@ def preprocess(data):
     # multiple space remove
     processed_data = re.sub(r"\s+", " ", processed_data)
     processed_data = processed_data.lower()
-    processed_data = processed_data.split()
-    processed_data = [prot_stem.stem(word) for word in processed_data if word not in stopwords.words("english")]
+    processed_data = word_tokenize(processed_data)
+    processed_data = [wordnet_lemmatizer.lemmatize(word) for word in processed_data if word not in stopwords.words("english")]
     processed_data = " ".join(processed_data)
     return processed_data
 
@@ -58,7 +61,6 @@ def construct_songs_pipeline() -> ETLPipeline:
     def transform_lyrics(data_frame: pd.DataFrame):
         data_frame = data_frame.drop(columns=data_frame.columns[0], axis=1)
         data_frame = data_frame.rename(columns={"seq": "lyrics"})
-        data_frame["processed_lyrics"] = data_frame["lyrics"].apply(preprocess)
         return data_frame
 
     songs_csv_handler = CSVHandler(
