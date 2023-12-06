@@ -1,5 +1,6 @@
 #!/bin/bash
 pytest project/tests/tests_system.py -rA
+pytest project/tests/tests_transform.py -rA
 
 
 # To run the tests you need kaggle credentials to pull data from kaggle.
