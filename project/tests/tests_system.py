@@ -16,6 +16,7 @@ class TestPipeline:
         loader = songs_pipeline.extractor.file_handlers[0].loader
         ETLQueue(etl_pipelines=(songs_pipeline,)).run()
         db_path = os.path.join(loader.output_directory, loader.db_name)
+        assert os.path.exists(db_path) == True
         try:
             connection = sqlite3.connect(db_path)
             result = pd.read_sql_query(f"SELECT * FROM {loader.table_name}", connection)
@@ -32,6 +33,7 @@ class TestPipeline:
         loader = twitter_pipeline.extractor.file_handlers[0].loader
         ETLQueue(etl_pipelines=(twitter_pipeline,)).run()
         db_path = os.path.join(loader.output_directory, loader.db_name)
+        assert os.path.exists(db_path) == True
         try:
             connection = sqlite3.connect(db_path)
             result = pd.read_sql_query(f"SELECT * FROM {loader.table_name}", connection)
