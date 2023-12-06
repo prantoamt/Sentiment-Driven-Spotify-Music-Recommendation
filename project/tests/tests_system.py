@@ -13,8 +13,8 @@ from etl_pipeline_runner.services import (
 
 class TestPipeline:
     def test_song_pipline_ok(self, songs_pipeline):
-        loader = songs_pipeline.extractor.file_handlers[0].loader
         ETLQueue(etl_pipelines=(songs_pipeline,)).run()
+        loader = songs_pipeline.extractor.file_handlers[0].loader
         db_path = os.path.join(loader.output_directory, loader.db_name)
         assert os.path.exists(db_path) == True
         try:
@@ -30,8 +30,8 @@ class TestPipeline:
         os.remove(db_path)
 
     def test_twitter_pipline_ok(self, twitter_pipeline):
-        loader = twitter_pipeline.extractor.file_handlers[0].loader
         ETLQueue(etl_pipelines=(twitter_pipeline,)).run()
+        loader = twitter_pipeline.extractor.file_handlers[0].loader
         db_path = os.path.join(loader.output_directory, loader.db_name)
         assert os.path.exists(db_path) == True
         try:
