@@ -21,43 +21,59 @@ DATA_DIRECTORY = os.path.join(os.getcwd(), "data")
 def songs_pipeline():
     songs_loader = SQLiteLoader(
     db_name="test.sqlite",
-    table_name="song_lyrics",
+    table_name="songs",
     if_exists=SQLiteLoader.REPLACE,
     index=False,
     method=None,
     output_directory=DATA_DIRECTORY,
     )
-    songs_dtype = {
-        "#": "Int64",
-        "artist": str,
-        "seq": str,
-        "song": str,
-        "label": np.float64,
+    songs_file_dtype = {
+        "track_name": str,
+        "artist(s)_name": str,
+        "artist_count": np.int64,
+        "released_year": np.int64,
+        "released_month": np.int64,
+        "released_day": np.int64,
+        "in_spotify_playlists": np.int64,
+        "in_spotify_charts": np.int64,
+        "streams": np.int64,
+        "in_apple_playlists": np.int64,
+        "in_apple_charts": np.int64,
+        "in_deezer_playlists": np.int64,
+        "in_deezer_charts": np.int64,
+        "in_shazam_charts": np.int64,
+        "bpm": np.int64,
+        "key": str,
+        "mode": str,
+        "danceability_%": np.int64,
+        "valence_%": np.int64,
+        "energy_%": np.int64,
+        "acousticness_%": np.int64,
+        "instrumentalness_%": np.int64,
+        "liveness_%": np.int64,
+        "speechiness_%": np.int64,
     }
     
     def transform_songs(data_frame: pd.DataFrame):
         data_frame = data_frame.drop(columns=data_frame.columns[0], axis=1)
-        data_frame = data_frame.rename(columns={"seq": "lyrics"})
         return data_frame
 
     songs_csv_handler = CSVHandler(
-        file_name="labeled_lyrics_cleaned.csv",
+        file_name="spotify-2023.csv",
         sep=",",
         names=None,
-        dtype=songs_dtype,
         transformer=transform_songs,
         loader=songs_loader,
+        encoding="latin-1",
     )
-
-    songs_extractor = DataExtractor(
-        data_name="Song lyrics",
-        url="https://www.kaggle.com/datasets/edenbd/150k-lyrics-labeled-with-spotify-valence",
+    songs_data_extractor = DataExtractor(
+        data_name="Spotify songs",
+        url="https://www.kaggle.com/datasets/nelgiriyewithana/top-spotify-songs-2023",
         type=DataExtractor.KAGGLE_ARCHIVE,
         file_handlers=(songs_csv_handler,),
     )
-
     songs_pipeline = ETLPipeline(
-        extractor=songs_extractor,
+        extractor=songs_data_extractor,
     )
     yield songs_pipeline
     
