@@ -14,77 +14,23 @@ from etl_pipeline_runner.services import (
     SQLiteLoader,
     ETLQueue,
 )
+from project.pipeline import construct_songs_pipeline, construct_twitter_pipeline
 
 DATA_DIRECTORY = os.path.join(os.getcwd(), "data")
 
 @pytest.fixture
 def songs_pipeline():
-    songs_loader = SQLiteLoader(
-    db_name="test.sqlite",
-    table_name="songs",
-    if_exists=SQLiteLoader.REPLACE,
-    index=False,
-    method=None,
-    output_directory=DATA_DIRECTORY,
-    )
-
-    songs_csv_handler = CSVHandler(
-        file_name="spotify-2023.csv",
-        sep=",",
-        names=None,
-        loader=songs_loader,
-        encoding="latin-1",
-    )
-    songs_data_extractor = DataExtractor(
-        data_name="Spotify songs",
-        url="https://www.kaggle.com/datasets/nelgiriyewithana/top-spotify-songs-2023",
-        type=DataExtractor.KAGGLE_ARCHIVE,
-        file_handlers=(songs_csv_handler,),
-    )
-    songs_pipeline = ETLPipeline(
-        extractor=songs_data_extractor,
-    )
+    songs_pipeline = construct_songs_pipeline()
+    songs_pipeline.extractor.file_handlers[0].transformer = None
+    songs_pipeline.extractor.file_handlers[0].loader.db_name = "test.sqlite"
     yield songs_pipeline
     
 
 @pytest.fixture
 def twitter_pipeline():
-    twitter_output_db = SQLiteLoader(
-        db_name="test.sqlite",
-        table_name="tweets",
-        if_exists=SQLiteLoader.REPLACE,
-        index=False,
-        method=None,
-        output_directory=DATA_DIRECTORY,
-    )
-    
-    def transform_twitter(data_frame: pd.DataFrame):
-        data_frame = data_frame.dropna(axis=0)
-        data_frame = data_frame.drop(columns=[data_frame.columns[1], data_frame.columns[2], data_frame.columns[3], data_frame.columns[4]], axis=1)
-        data_frame = data_frame.replace({"target": {4:1}})
-        return data_frame
-    
-    twitter_csv_handler = CSVHandler(
-        file_name="training.1600000.processed.noemoticon.csv",
-        sep=",",
-        names=["target", "id", "date", "flag", "user", "text"],
-        dtype={"target": np.int64, "text": str},
-        encoding="ISO-8859-1",
-        transformer=transform_twitter,
-        loader=twitter_output_db
-    )
-    
-    twitter_data_extractor = DataExtractor(
-        data_name="Twitter",
-        url="https://www.kaggle.com/datasets/kazanova/sentiment140",
-        type=DataExtractor.KAGGLE_ARCHIVE,
-        file_handlers=(twitter_csv_handler,),
-    )
-    
-    twitter_pipeline = ETLPipeline(
-        extractor=twitter_data_extractor,
-    )
-    
+    twitter_pipeline = construct_twitter_pipeline()
+    twitter_pipeline.extractor.file_handlers[0].transformer = None
+    twitter_pipeline.extractor.file_handlers[0].loader.db_name = "test.sqlite"
     yield twitter_pipeline
     
 @pytest.fixture
