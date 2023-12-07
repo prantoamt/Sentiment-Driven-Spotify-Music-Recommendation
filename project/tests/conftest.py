@@ -27,42 +27,11 @@ def songs_pipeline():
     method=None,
     output_directory=DATA_DIRECTORY,
     )
-    songs_file_dtype = {
-        "track_name": str,
-        "artist(s)_name": str,
-        "artist_count": np.int64,
-        "released_year": np.int64,
-        "released_month": np.int64,
-        "released_day": np.int64,
-        "in_spotify_playlists": np.int64,
-        "in_spotify_charts": np.int64,
-        "streams": np.int64,
-        "in_apple_playlists": np.int64,
-        "in_apple_charts": np.int64,
-        "in_deezer_playlists": np.int64,
-        "in_deezer_charts": np.int64,
-        "in_shazam_charts": np.int64,
-        "bpm": np.int64,
-        "key": str,
-        "mode": str,
-        "danceability_%": np.int64,
-        "valence_%": np.int64,
-        "energy_%": np.int64,
-        "acousticness_%": np.int64,
-        "instrumentalness_%": np.int64,
-        "liveness_%": np.int64,
-        "speechiness_%": np.int64,
-    }
-    
-    def transform_songs(data_frame: pd.DataFrame):
-        data_frame = data_frame.drop(columns=data_frame.columns[0], axis=1)
-        return data_frame
 
     songs_csv_handler = CSVHandler(
         file_name="spotify-2023.csv",
         sep=",",
         names=None,
-        transformer=transform_songs,
         loader=songs_loader,
         encoding="latin-1",
     )
