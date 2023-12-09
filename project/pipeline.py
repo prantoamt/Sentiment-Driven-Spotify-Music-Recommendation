@@ -42,38 +42,30 @@ def preprocess(data):
     return processed_data
 
 def construct_songs_pipeline() -> ETLPipeline:
-    songs_output_db = SQLiteLoader(
+    songs_loader = SQLiteLoader(
         db_name="project.sqlite",
-        table_name="song_lyrics",
+        table_name="songs",
         if_exists=SQLiteLoader.REPLACE,
         index=False,
         method=None,
         output_directory=DATA_DIRECTORY,
     )
-    songs_file_dtype = {
-        "#": "Int64",
-        "artist": str,
-        "seq": str,
-        "song": str,
-        "label": np.float64,
-    }
 
-    def transform_lyrics(data_frame: pd.DataFrame):
-        data_frame = data_frame.drop(columns=data_frame.columns[0], axis=1)
-        data_frame = data_frame.rename(columns={"seq": "lyrics"})
+    def transform_songs(data_frame: pd.DataFrame):
+        data_frame = data_frame.dropna(axis=0)
         return data_frame
 
     songs_csv_handler = CSVHandler(
-        file_name="labeled_lyrics_cleaned.csv",
+        file_name="spotify-2023.csv",
         sep=",",
         names=None,
-        dtype=songs_file_dtype,
-        transformer=transform_lyrics,
-        loader=songs_output_db
+        transformer=transform_songs,
+        loader=songs_loader,
+        encoding="latin-1",
     )
     songs_data_extractor = DataExtractor(
-        data_name="Song lyrics",
-        url="https://www.kaggle.com/datasets/edenbd/150k-lyrics-labeled-with-spotify-valence",
+        data_name="Spotify songs",
+        url="https://www.kaggle.com/datasets/nelgiriyewithana/top-spotify-songs-2023",
         type=DataExtractor.KAGGLE_ARCHIVE,
         file_handlers=(songs_csv_handler,),
     )
