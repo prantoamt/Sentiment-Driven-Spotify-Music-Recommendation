@@ -77,14 +77,16 @@ The URL will return a ZIP file containing 1 file: "training.1600000.processed.no
 
 <!-- List of work packages ordered sequentially, each pointing to an issue with more details. -->
 
-1. Investigate for interesting dataset [#1][i1]
-2. Write initial Description about the project plan [#2][i2]
-3. Construct ETL Pipeline [#3][i3]
-4. Create test cases for ETL Pipeline [#4][i4]
-4. Explore data for model training and predictions [#5][i5]
+1. Investigate for interesting dataset. [#1][i1]
+2. Write initial Description about the project plan. [#2][i2]
+3. Construct ETL Pipeline. [#3][i3]
+4. Create test cases for ETL Pipeline. [#4][i4]
+4. Explore data for model training and predictions. [#5][i5]
+4. Write final report. [#5][i5]
 
 [i1]: https://github.com/prantoamt/made-template/issues/1
 [i2]: https://github.com/prantoamt/made-template/issues/2
 [i3]: https://github.com/prantoamt/made-template/issues/8
 [i4]: https://github.com/prantoamt/made-template/issues/15
 [i5]: https://github.com/prantoamt/made-template/issues/16
+[i6]: https://github.com/prantoamt/made-template/issues/31
