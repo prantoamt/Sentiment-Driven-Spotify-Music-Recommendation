@@ -1,7 +1,7 @@
 # Project Plan
 
 ## Title
-Music Recommendation Based on human mood.
+Sentiment-Driven Spotify Music Recommendation: Leveraging Social Media Posts and User Playlists for Personalized Music Experiences
 
 ## Main Question
 
