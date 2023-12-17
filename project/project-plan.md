@@ -81,12 +81,14 @@ The URL will return a ZIP file containing 1 file: "training.1600000.processed.no
 2. Write initial Description about the project plan. [#2][i2]
 3. Construct ETL Pipeline. [#3][i3]
 4. Create test cases for ETL Pipeline. [#4][i4]
-4. Explore data for model training and predictions. [#5][i5]
-4. Write final report. [#5][i5]
+5. Explore data for model training and predictions. [#5][i5]
+6. Build ci for the project. [#6][i6]
+7. Write final report. [#7][i7]
 
 [i1]: https://github.com/prantoamt/made-template/issues/1
 [i2]: https://github.com/prantoamt/made-template/issues/2
 [i3]: https://github.com/prantoamt/made-template/issues/8
 [i4]: https://github.com/prantoamt/made-template/issues/15
 [i5]: https://github.com/prantoamt/made-template/issues/16
-[i6]: https://github.com/prantoamt/made-template/issues/31
+[i6]: https://github.com/prantoamt/made-template/issues/28
+[i7]: https://github.com/prantoamt/made-template/issues/31
