@@ -7,7 +7,7 @@ Welcome to the Sentiment-Driven Music Recommender GitHub repository! 🎵
 ### Overview
 This project aims to redefine personalized music experiences by seamlessly integrating social media sentiment analysis into the realm of music curation. The approach involves training a Logistic Regression model on Twitter posts to extract sentiment, achieving a commendable 76% test accuracy. Building upon this foundation, the system identifies users' sentiments and combines them with their existing music playlists to offer truly personalized and emotionally resonant music recommendations.
 
-#### Project Goals
+### Project Goals
 In the dynamic landscape of personalized music, the goals include:
 
 - Sentiment Analysis Model: Train a Logistic Regression model to discern sentiment from social media posts, capturing the emotional nuances that influence music choices.
