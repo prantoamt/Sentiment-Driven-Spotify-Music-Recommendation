@@ -20,7 +20,7 @@ Project report [here](/project/report.pdf), slides and video presentation can be
 
 To run the project on local machine, ensure that you have the necessary libraries installed. Follow the steps outlined in the [Running the Project Locally](#running-the-project-locally) section for the installation process.
 
-## Key project files and their functions:
+### Key project files and their functions:
 
 - `project/pipeline.sh`: It will run an automated ETL pipeline for the project.
 - `project/tests.sh` : It will run the test cases the project.
@@ -28,7 +28,7 @@ To run the project on local machine, ensure that you have the necessary librarie
 - `project/logistic_regression_model.joblib` : Trained logistic regression model.
 - `project/vectorizer.joblib` : Fitted vectorizer for the model.
 
-## Running the Project Locally
+### Running the Project Locally
 
 1. Clone the repository:
 
@@ -60,7 +60,7 @@ pip install -r requirements.txt
 python ./project/main.py
 ```
 
-## etl-pipeline-runner
+### etl-pipeline-runner
 An ETL (Extract Transform Load) pipeline has been employed a to gather the required data for this project. Throughout the project, a collaborative effort has been made to initiate an [open-source Python package](https://github.com/prantoamt/etl-pipeline-runner) for executing ETL pipelines. Take a moment to review our contributions and share your feedback. Your input is highly appreciated.
 
 ### Exercises
