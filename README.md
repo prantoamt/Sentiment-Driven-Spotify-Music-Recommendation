@@ -16,7 +16,7 @@ In the dynamic landscape of personalized music, the goals include:
 
 - Recommendation Engine: Develop a sophisticated recommendation engine that dynamically adapts to users' changing emotions and preferences, ensuring personalized and responsive music suggestions.
 
-Project report [here](/project/report.pdf), slides and video presentation can be found in this repository as well. Feel free to navigate through the report to gain a comprehensive understanding of the project's objectives, methods, results, and potential implications.
+Project report [here](/project/report.pdf), [slides](/project/slides.pdf) and video presentation can be found in this repository as well. Feel free to navigate through the report to gain a comprehensive understanding of the project's objectives, methods, results, and potential implications.
 
 To run the project on local machine, ensure that you have the necessary libraries installed. Follow the steps outlined in the [Running the Project Locally](#running-the-project-locally) section for the installation process.
 
