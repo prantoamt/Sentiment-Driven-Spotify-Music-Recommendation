@@ -1,42 +1,77 @@
-# Methods of Advanced Data Engineering Template Project
+> *Within this repository, you will discover a data engineering and data science project, along with exercises leveraging open data sources as an integral component of the MADE ([Methods of Advanced Data Engineering](https://oss.cs.fau.de/teaching/specific/saki/)) course. The course was conducted by the FAU Chair for Open-Source Software (OSS) during the Winter '24 semester. This repository has been forked from the [jvalue-made-template](https://github.com/jvalue/made-template) repository.*
 
-This template project provides some structure for your open data project in the MADE module at FAU.
-This repository contains (a) a data science project that is developed by the student over the course of the semester, and (b) the exercises that are submitted over the course of the semester.
-Before you begin, make sure you have [Python](https://www.python.org/) and [Jayvee](https://github.com/jvalue/jayvee) installed. We will work with [Jupyter notebooks](https://jupyter.org/). The easiest way to do so is to set up [VSCode](https://code.visualstudio.com/) with the [Jupyter extension](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter).
+# Sentiment-Driven Spotify Music Recommendation: Leveraging Social Media Posts and User Playlists for Personalized Music Experience 🎵😊
 
+[![Cover](/project/imgaes/cover.png)](https://youtu.be/2Sqw29sXoUE)
 
-## Project Work
-Your data engineering project will run alongside lectures during the semester. We will ask you to regularly submit project work as milestones so you can reasonably pace your work. All project work submissions **must** be placed in the `project` folder.
+Welcome to the Sentiment-Driven Music Recommender GitHub repository!
 
-### Exporting a Jupyter Notebook
-Jupyter Notebooks can be exported using `nbconvert` (`pip install nbconvert`). For example, to export the example notebook to html: `jupyter nbconvert --to html examples/final-report-example.ipynb --embed-images --output final-report.html`
+### Overview
+This project aims to redefine personalized music experiences by seamlessly integrating social media sentiment analysis into the realm of music curation. The approach involves training a Logistic Regression model on Twitter posts to extract sentiment, achieving a commendable 76% test accuracy. Building upon this foundation, the system identifies users' sentiments and combines them with their existing music playlists to offer truly personalized and emotionally resonant music recommendations.
 
+### Project Goals
+In the dynamic landscape of personalized music, the goals include:
 
-## Exercises
-During the semester you will need to complete exercises, sometimes using [Python](https://www.python.org/), sometimes using [Jayvee](https://github.com/jvalue/jayvee). You **must** place your submission in the `exercises` folder in your repository and name them according to their number from one to five: `exercise<number from 1-5>.<jv or py>`.
+- Sentiment Analysis Model: Train a Logistic Regression model to discern sentiment from social media posts, capturing the emotional nuances that influence music choices.
 
-In regular intervalls, exercises will be given as homework to complete during the semester. We will divide you into two groups, one completing an exercise in Jayvee, the other in Python, switching each exercise. Details and deadlines will be discussed in the lecture, also see the [course schedule](https://made.uni1.de/). At the end of the semester, you will therefore have the following files in your repository:
+- User Playlist Integration: Leverage sentiment scores alongside existing playlist data to gain a holistic understanding of a user's musical inclinations. This project uses a dummy playlist instead of real user playlist.
 
-1. `./exercises/exercise1.jv` or `./exercises/exercise1.py`
-2. `./exercises/exercise2.jv` or `./exercises/exercise2.py`
-3. `./exercises/exercise3.jv` or `./exercises/exercise3.py`
-4. `./exercises/exercise4.jv` or `./exercises/exercise4.py`
-5. `./exercises/exercise5.jv` or `./exercises/exercise5.py`
+- Recommendation Engine: Develop a sophisticated recommendation engine that dynamically adapts to users' changing emotions and preferences, ensuring personalized and responsive music suggestions.
 
-### Exercise Feedback
-We provide automated exercise feedback using a GitHub action (that is defined in `.github/workflows/exercise-feedback.yml`). 
+Project report [here](/project/report.pdf), [slides](/project/slides.pdf) and [video](/project/presentation-video.md) presentation can be found in this repository as well. Feel free to navigate through the report to gain a comprehensive understanding of the project's objectives, methods, results, and potential implications.
 
-To view your exercise feedback, navigate to Actions -> Exercise Feedback in your repository.
+To run the project on local machine, ensure that you have the necessary libraries installed. Follow the steps outlined in the [Running the Project Locally](#running-the-project-locally) section for the installation process.
 
-The exercise feedback is executed whenever you make a change in files in the `exercise` folder and push your local changes to the repository on GitHub. To see the feedback, open the latest GitHub Action run, open the `exercise-feedback` job and `Exercise Feedback` step. You should see command line output that contains output like this:
+### Key project files and their functions:
 
-```sh
-Found exercises/exercise1.jv, executing model...
-Found output file airports.sqlite, grading...
-Grading Exercise 1
-	Overall points 17 of 17
-	---
-	By category:
-		Shape: 4 of 4
-		Types: 13 of 13
+- `project/pipeline.sh`: It will run an automated ETL pipeline for the project.
+- `project/tests.sh` : It will run the test cases the project.
+- `project/main.sh` : It will run the project and ask for input.
+- `project/logistic_regression_model.joblib` : Trained logistic regression model.
+- `project/vectorizer.joblib` : Fitted vectorizer for the model.
+
+### Running the Project Locally
+
+1. Clone the repository:
+
 ```
+git clone git@github.com:prantoamt/made-template.git
+```
+
+2. Create virtual environment:
+
+```
+python3 -m venv venv
+```
+
+3. Activate the virtual environment:
+
+```
+source .venv/bin/activate
+``` 
+
+4. Install requirements:
+
+```
+pip install -r requirements.txt
+```
+
+5. Run the project:
+
+```
+python ./project/main.py
+```
+
+### etl-pipeline-runner
+An ETL (Extract Transform Load) pipeline has been employed a to gather the required data for this project. Throughout the project, a collaborative effort has been made to initiate an [open-source Python package](https://github.com/prantoamt/etl-pipeline-runner) for executing ETL pipelines. Take a moment to review our contributions and share your feedback. Your input is highly appreciated.
+
+### Exercises
+Throughout the semester, we were engaged in exercises that required the utilization of both Python and [Jayvee](https://github.com/jvalue/jayvee). Automated feedback for these exercises is facilitated through a GitHub action defined in .github/workflows/exercise-feedback.yml.
+
+Here are the exercise files:
+- [exercise1.py](/exercises/exercise1.py)
+- [exercise2.jv](/exercises/exercise2.jv)
+
+The exercise feedback is triggered each time we make changes to files in the exercise/ directory and push those changes to the GitHub repository. To view the feedback, access the latest GitHub Action run, and navigate to the exercise-feedback job and Exercise Feedback step.
+
+Feel free to explore, contribute, and enjoy a personalized music journey with our Sentiment-Driven Music Recommender! 🎶
