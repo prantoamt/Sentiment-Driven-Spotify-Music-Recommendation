@@ -2,6 +2,10 @@
 
 # Sentiment-Driven Spotify Music Recommendation: Leveraging Social Media Posts and User Playlists for Personalized Music Experience 🎵😊
 
+<figure>
+    <img src="/project/imgaes/cover.png" style="width:100%">
+</figure>
+
 Welcome to the Sentiment-Driven Music Recommender GitHub repository!
 
 ### Overview
