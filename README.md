@@ -59,7 +59,7 @@ pip install -r requirements.txt
 5. Run the project:
 
 ```
-python ./project/main.py
+python ./project/main.sh
 ```
 
 ### etl-pipeline-runner
