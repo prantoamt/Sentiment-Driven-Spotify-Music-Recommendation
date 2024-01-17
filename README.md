@@ -24,7 +24,7 @@ To run the project on local machine, ensure that you have the necessary librarie
 
 - `project/pipeline.sh`: It will run an automated ETL pipeline for the project.
 - `project/tests.sh` : It will run the test cases the project.
-- `project/main.py` : It will run the project and ask for input.
+- `project/main.sh` : It will run the project and ask for input.
 - `project/logistic_regression_model.joblib` : Trained logistic regression model.
 - `project/vectorizer.joblib` : Fitted vectorizer for the model.
 
