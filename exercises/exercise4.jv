@@ -25,12 +25,12 @@ pipeline BatteryPipeline {
     } 
     
     block RenameTemperaturCellWriter oftype CellWriter {
-         at: cell E1;
+        at: cell E1;
         write: ["Temperatur"]; 
     }
 
     block RenameTemperaturBatteryCellWriter oftype CellWriter {
-         at: cell J1;
+        at: cell J1;
         write: ["Batterietemperatur"]; 
     }  
 
