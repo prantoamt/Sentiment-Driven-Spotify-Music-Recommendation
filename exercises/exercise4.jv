@@ -18,6 +18,10 @@ pipeline BatteryPipeline {
      
     block BatteryCSVInterpreter oftype CSVInterpreter {
         delimiter: ";";
+    }
+
+    block BatteryCoreDataSelector oftype CellRangeSelector {
+    select: range A1:N*;
     } 
     
     block RenameTemperaturCellWriter oftype CellWriter {
@@ -78,6 +82,7 @@ pipeline BatteryPipeline {
     -> BatteryFilePicker
     -> BatteryFileInterpreter
     -> BatteryCSVInterpreter
+    -> BatteryCoreDataSelector
     -> RenameTemperaturCellWriter
     -> RenameTemperaturBatteryCellWriter
     -> BatterieTableInterpreter
