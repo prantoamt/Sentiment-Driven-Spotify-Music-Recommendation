@@ -21,7 +21,7 @@ pipeline BatteryPipeline {
     }
 
     block BatteryCoreDataSelector oftype CellRangeSelector {
-    select: range A1:N*;
+    select: range A1:K*;
     } 
     
     block RenameTemperaturCellWriter oftype CellWriter {
