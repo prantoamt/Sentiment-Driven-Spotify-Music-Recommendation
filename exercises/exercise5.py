@@ -1,8 +1,8 @@
 import urllib.request
+import os
 import pandas as pd
 import sqlite3
 from zipfile import ZipFile
-from io import BytesIO
 
 # Download the ZIP file
 url = 'https://gtfs.rhoenenergie-bus.de/GTFS.zip'
@@ -43,3 +43,6 @@ stops_data.to_sql('stops', conn, if_exists='replace', index=False, dtype={
 
 # Closing the database connection
 conn.close()
+
+# Delete the ZIP file
+os.remove(zip_file_path)
